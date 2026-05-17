@@ -108,11 +108,11 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         </header>
         <div className="p-6 overflow-y-auto text-slate-300 space-y-4">
            <div>
-            <h3 className="font-bold text-lg text-white mb-2">{t('theGoal')}</h3>
+            <h3 className="font-bold text-lg text-yellow-400 mb-2">{t('theGoal')}</h3>
             <p>{t('goalDesc', { rounds: ROUNDS_PER_GAME })}</p>
           </div>
           <div>
-            <h3 className="font-bold text-lg text-white mb-2">{t('gameModes')}</h3>
+            <h3 className="font-bold text-lg text-yellow-400 mb-2">{t('gameModes')}</h3>
              <ul className="list-disc list-inside space-y-3">
               <li>
                 <strong>{t('guessYear')}:</strong> {t('guessYearDesc')}
@@ -127,13 +127,13 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
              <p className="mt-4">{t('timerDesc', { duration: ROUND_DURATION_SECONDS })}</p>
           </div>
           <div>
-            <h3 className="font-bold text-lg text-white mb-2">{t('scoring')}</h3>
+            <h3 className="font-bold text-lg text-yellow-400 mb-2">{t('scoring')}</h3>
             <p>
               {t('scoringDesc', { tolerance: YEAR_TOLERANCE })}
             </p>
           </div>
            <div>
-            <h3 className="font-bold text-lg text-white mb-2">{t('learnMore')}</h3>
+            <h3 className="font-bold text-lg text-yellow-400 mb-2">{t('learnMore')}</h3>
             <p>{t('learnMoreDesc')}</p>
           </div>
         </div>
