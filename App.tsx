@@ -505,11 +505,6 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
     setRagSources([]);
 
     try {
-      if (!process.env.API_KEY) {
-        throw new Error("API_KEY environment variable not set");
-      }
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      
       let targetLanguage = 'English';
       if (i18n.language === 'fr') targetLanguage = 'French';
       if (i18n.language === 'ja') targetLanguage = 'Japanese';
@@ -518,16 +513,30 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
       if (i18n.language === 'hi') targetLanguage = 'Hindi';
       if (i18n.language === 'ar') targetLanguage = 'Arabic';
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Tell me a brief history about the French leader ${monarch.name} (${monarch.title}), written in an engaging and accessible tone. Focus on their rise to power, key events during their time in office, and their legacy. Keep it concise, around 3-4 paragraphs. Write the response in ${targetLanguage}.`,
-        config: {
-          tools: [{googleSearch: {}}],
+      const prompt = `Tell me a brief history about the French leader ${monarch.name} (${monarch.title}), written in an engaging and accessible tone. Focus on their rise to power, key events during their time in office, and their legacy. Keep it concise, around 3-4 paragraphs. Write the response in ${targetLanguage}.`;
+
+      const response = await fetch('/api/gemini/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ prompt, targetLanguage }),
       });
 
-      setRagContent({ title: getMonarchName(monarch), text: response.text, imageUrl: monarch.imageUrl });
-      const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          throw new Error(`Failed to fetch HTTP ${response.status}: ${response.statusText}`);
+        }
+        throw Object.assign(new Error(errorData.error || `Error ${response.status}`), { status: response.status });
+      }
+
+      const responseData = await response.json();
+
+      setRagContent({ title: getMonarchName(monarch), text: responseData.text, imageUrl: monarch.imageUrl });
+      const groundingChunks = responseData.groundingChunks;
       const sources = (groundingChunks as any[] || [])
         .map(chunk => chunk.web)
         .filter((web): web is GroundingSource => !!(web?.uri && web.title));

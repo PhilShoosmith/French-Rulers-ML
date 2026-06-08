@@ -2,5 +2,5 @@
   "name": "Languages Rulers of France Timeline: A Royal & Presidential Guessing Game 1.4.3",
   "description": "Test your knowledge of French leaders by placing them on the correct spot on the timeline. From medieval kings to modern presidents, score points for accuracy and see how well you know your French history!",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
