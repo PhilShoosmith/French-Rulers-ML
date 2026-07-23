@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@google/genai": "0.15.0",
-    "@supabase/supabase-js": "latest",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "firebase": "^12.16.0",
     "google-translate-api-x": "^10.7.2",
     "i18next": "^26.0.4",
     "lucide-react": "^0.576.0",

@@ -1,32 +1,35 @@
 
 import { Score, GameMode } from '../types';
-import { supabase } from './supabaseClient';
+import { db } from './firebaseClient';
+import { collection, addDoc, getDocs, query, orderBy, limit, where } from 'firebase/firestore';
 
 export const saveScore = async (newScore: Score) => {
-  const { error } = await supabase
-    .from('scores')
-    .insert([newScore]);
-    
-  if (error) {
+  try {
+    await addDoc(collection(db, 'scores'), newScore);
+  } catch (error) {
     console.error('Error saving score:', error);
   }
 };
 
-export const getTopScores = async (mode: GameMode, limit: number = 10): Promise<Score[]> => {
-  const { data, error } = await supabase
-    .from('scores')
-    .select('*')
-    .eq('mode', mode)
-    .order('score', { ascending: false })
-    .order('timeLeft', { ascending: false })
-    .limit(limit);
-
-  if (error) {
+export const getTopScores = async (mode: GameMode, maxResults: number = 10): Promise<Score[]> => {
+  try {
+    const q = query(
+      collection(db, 'scores'),
+      where('mode', '==', mode),
+      orderBy('score', 'desc'),
+      orderBy('timeLeft', 'desc'),
+      limit(maxResults)
+    );
+    const querySnapshot = await getDocs(q);
+    const scores: Score[] = [];
+    querySnapshot.forEach((doc) => {
+      scores.push(doc.data() as Score);
+    });
+    return scores;
+  } catch (error) {
     console.error('Error fetching scores:', error);
     return [];
   }
-
-  return data as Score[];
 };
 
 export const isTopScore = async (mode: GameMode, score: number, timeLeft: number): Promise<boolean> => {
