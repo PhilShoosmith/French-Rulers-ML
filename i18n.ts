@@ -128,7 +128,7 @@ const resources = {
       "cookiesLocal": "Cookies and Local Storage",
       "privacyCookies": "We use local storage to save your game progress, high scores, and language preferences. We do not use tracking cookies.",
       "contactUs": "Contact Us",
-      "privacyContact": "If you have any questions about this Privacy Policy, please contact us at historicaltimelines4@gmail.com.",
+      "privacyContact": "Any questions about this Privacy Policy, please contact us at historicaltimelines4@gmail.com.",
       "agreementToTerms": "Agreement to Terms",
       "termsAgreement": "By accessing or using Rulers of France Timeline, you agree to be bound by these Terms of Service.",
       "useLicense": "Use License",
