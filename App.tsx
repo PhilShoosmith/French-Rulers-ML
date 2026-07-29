@@ -113,15 +113,15 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           </div>
           <div>
             <h3 className="font-bold text-lg text-yellow-400 mb-2">{t('gameModes')}</h3>
-             <ul className="list-disc list-inside space-y-3">
-              <li>
-                <strong>{t('guessYear')}:</strong> {t('guessYearDesc')}
+             <ul className="list-disc list-inside space-y-3 mt-2">
+              <li className="leading-relaxed">
+                <strong className="bg-blue-600 text-white px-2 py-0.5 rounded mr-1 inline-block">{t('guessYear')}</strong> {t('guessYearDesc')}
               </li>
-              <li>
-                <strong>{t('guessSuccessor')}:</strong> {t('guessSuccessorDesc')}
+              <li className="leading-relaxed">
+                <strong className="bg-blue-600 text-white px-2 py-0.5 rounded mr-1 inline-block">{t('guessSuccessor')}</strong> {t('guessSuccessorDesc')}
               </li>
-               <li>
-                <strong>{t('guessRuler')}:</strong> {t('guessRulerDesc')}
+               <li className="leading-relaxed">
+                <strong className="bg-blue-600 text-white px-2 py-0.5 rounded mr-1 inline-block">{t('guessRuler')}</strong> {t('guessRulerDesc')}
               </li>
             </ul>
              <p className="mt-4">{t('timerDesc', { duration: ROUND_DURATION_SECONDS })}</p>
