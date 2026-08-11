@@ -51,7 +51,14 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
           <p>{t('privacyCookies')}</p>
           
           <h3 className="font-bold text-lg text-white mt-4">5. {t('contactUs')}</h3>
-          <p>{t('privacyContact')}</p>
+          <p>
+            {t('privacyContact').split('historicaltimelines4@gmail.com').map((part, i, arr) => (
+              <React.Fragment key={i}>
+                {part}
+                {i < arr.length - 1 && <strong>historicaltimelines4@gmail.com</strong>}
+              </React.Fragment>
+            ))}
+          </p>
         </div>
          <footer className="p-4 flex justify-end border-t border-slate-700">
             <button
