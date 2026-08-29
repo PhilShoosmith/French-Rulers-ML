@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Monarch } from '../types';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +14,21 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({ monarchs, onSub
   const { t, i18n } = useTranslation();
   const [selectedId, setSelectedId] = useState<string>('');
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const getMonarchName = (m: Monarch) => {
     if (i18n.language === 'fr' && m.nameFr) return m.nameFr;
@@ -30,6 +45,12 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({ monarchs, onSub
     [monarchs, i18n.language]
   );
 
+  const filteredMonarchs = useMemo(() => {
+    return sortedMonarchs.filter(m => 
+      getMonarchName(m).toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [sortedMonarchs, searchTerm]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (disabled || !selectedId || feedback || !correctSuccessorId) return;
@@ -44,7 +65,7 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({ monarchs, onSub
   };
 
   const selectClasses = [
-    'bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white text-lg w-full flex-grow focus:outline-none focus:ring-2 transition-all duration-300 disabled:opacity-50',
+    'bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white text-lg w-full focus:outline-none focus:ring-2 transition-all duration-300 disabled:opacity-50',
     feedback === 'correct' ? 'border-green-500 ring-green-500 bg-green-900/50' :
     feedback === 'incorrect' ? 'border-red-500 ring-red-500 bg-red-900/50' :
     'focus:ring-purple-500'
@@ -60,21 +81,44 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({ monarchs, onSub
 
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4 w-full">
-      <select
-        value={selectedId}
-        onChange={(e) => setSelectedId(e.target.value)}
-        disabled={disabled || !!feedback}
-        className={selectClasses}
-        aria-label="Select the next monarch"
-      >
-        <option value="" disabled>{t('selectMonarch')}</option>
-        {sortedMonarchs.map(monarch => (
-          <option key={monarch.id} value={monarch.id}>
-            {getMonarchName(monarch)}
-          </option>
-        ))}
-      </select>
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
+      <div ref={wrapperRef} className="relative w-full flex-grow">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setSelectedId('');
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          disabled={disabled || !!feedback}
+          placeholder={t('selectMonarch')}
+          className={selectClasses}
+          aria-label="Select the next monarch"
+        />
+        {isOpen && !disabled && !feedback && (
+          <ul className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-slate-800 border border-slate-600 rounded-lg shadow-xl text-left">
+            {filteredMonarchs.length > 0 ? (
+              filteredMonarchs.map(monarch => (
+                <li
+                  key={monarch.id}
+                  onClick={() => {
+                    setSelectedId(monarch.id.toString());
+                    setSearchTerm(getMonarchName(monarch));
+                    setIsOpen(false);
+                  }}
+                  className="px-4 py-2 hover:bg-slate-700 cursor-pointer text-white"
+                >
+                  {getMonarchName(monarch)}
+                </li>
+              ))
+            ) : (
+              <li className="px-4 py-2 text-slate-400">No results found</li>
+            )}
+          </ul>
+        )}
+      </div>
       <button
         type="submit"
         disabled={disabled || !selectedId || !!feedback}

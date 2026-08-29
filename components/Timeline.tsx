@@ -141,15 +141,15 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
         {HISTORICAL_PERIODS.map(period => (
             <div 
                 key={period.name}
-                className={`h-full flex items-center justify-center gap-2 px-2 ${period.color}`}
+                className={`h-full flex items-center justify-center gap-1 sm:gap-2 px-1 sm:px-2 overflow-hidden ${period.color}`}
                 style={{
                     position: 'absolute',
                     left: `${yearToPercentage(period.start)}%`,
                     width: `${yearToPercentage(period.end) - yearToPercentage(period.start)}%`,
                 }}
             >
-                <HouseIcon house={periodToHouseMap[period.name]} className={`h-5 w-5 opacity-80 ${period.textColor}`} />
-                <span className={`text-sm font-semibold opacity-80 select-none ${period.textColor}`}>{t(`period_${period.name.replace(' & ', 'And')}`)}</span>
+                <HouseIcon house={periodToHouseMap[period.name]} className={`h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 opacity-80 ${period.textColor}`} />
+                <span className={`text-xs sm:text-sm font-semibold opacity-80 select-none truncate ${period.textColor}`}>{t(`period_${period.name.replace(' & ', 'And')}`)}</span>
             </div>
         ))}
       </div>

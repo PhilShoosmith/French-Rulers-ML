@@ -47,6 +47,8 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({ isOpen, onClose, mona
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0 });
+  const initialPinchDistance = useRef<number | null>(null);
+  const initialScale = useRef<number>(1);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,31 +60,52 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({ isOpen, onClose, mona
   }, [isOpen]);
 
   const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
+    // We can't use e.preventDefault() on passive event listeners directly in React without specific ref bindings,
+    // but React's onWheel is passive by default in some newer versions unless we use native listeners.
+    // However, keeping it simple as it was before.
     const zoomSensitivity = 0.001;
     const delta = -e.deltaY * zoomSensitivity;
     setScale(prev => Math.min(Math.max(0.2, prev + delta), 3));
   };
 
-  // Touch support for dragging
+  // Touch support for dragging and zooming
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       setIsDragging(true);
       dragStart.current = { x: e.touches[0].clientX - position.x, y: e.touches[0].clientY - position.y };
+      initialPinchDistance.current = null;
+    } else if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      initialPinchDistance.current = Math.hypot(dx, dy);
+      initialScale.current = scale;
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (isDragging && e.touches.length === 1) {
+    if (e.touches.length === 1 && isDragging) {
       setPosition({
         x: e.touches[0].clientX - dragStart.current.x,
         y: e.touches[0].clientY - dragStart.current.y
       });
+    } else if (e.touches.length === 2 && initialPinchDistance.current !== null) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const distance = Math.hypot(dx, dy);
+      const newScale = initialScale.current * (distance / initialPinchDistance.current);
+      setScale(Math.min(Math.max(0.2, newScale), 3));
     }
   };
 
-  const handleTouchEnd = () => {
-    setIsDragging(false);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length === 0) {
+      setIsDragging(false);
+      initialPinchDistance.current = null;
+    } else if (e.touches.length === 1) {
+      setIsDragging(true);
+      dragStart.current = { x: e.touches[0].clientX - position.x, y: e.touches[0].clientY - position.y };
+      initialPinchDistance.current = null;
+    }
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -101,13 +124,6 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({ isOpen, onClose, mona
 
   const handleMouseUp = () => {
     setIsDragging(false);
-  };
-
-  const handleZoomIn = () => setScale(prev => Math.min(prev + 0.2, 3));
-  const handleZoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.2));
-  const handleResetView = () => {
-    setScale(1);
-    setPosition({ x: 0, y: 0 });
   };
 
   if (!isOpen) return null;
@@ -141,13 +157,6 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({ isOpen, onClose, mona
           </h2>
           
           <div className="flex items-center gap-4">
-            {/* Zoom Controls */}
-            <div className="flex bg-slate-800 rounded-lg border border-slate-600 overflow-hidden shadow-inner">
-              <button onClick={handleZoomOut} className="px-3 py-1 hover:bg-slate-700 text-slate-300 font-bold transition-colors" aria-label="Zoom Out">-</button>
-              <button onClick={handleResetView} className="px-3 py-1 hover:bg-slate-700 text-slate-300 text-sm border-x border-slate-600 transition-colors" aria-label="Reset View">{t('reset')}</button>
-              <button onClick={handleZoomIn} className="px-3 py-1 hover:bg-slate-700 text-slate-300 font-bold transition-colors" aria-label="Zoom In">+</button>
-            </div>
-            
             <button
               onClick={onClose}
               className="text-slate-400 hover:text-white transition-colors text-3xl leading-none font-bold ml-4"

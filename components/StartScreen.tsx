@@ -230,6 +230,19 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
                 </button>
             </div>
         </div>
+
+        {/* Hall of fame */}
+        <div className="mt-8 pt-6 border-t border-slate-700/50 flex flex-row items-center justify-center gap-3 animate-fade-in-up animation-delay-600">
+          <span className="text-slate-300 font-bold uppercase tracking-widest text-sm md:text-base">Hall of Fame &rarr;</span>
+          <button 
+            onClick={onShowHallOfFame} 
+            className="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-full hover:bg-amber-500/20 hover:text-white transition-all duration-300 focus:outline-none group shadow-lg"
+            title="Hall of Fame"
+            aria-label="View Hall of Fame"
+          >
+            <span className="text-2xl group-hover:scale-125 transition-transform">🥇</span>
+          </button>
+        </div>
       </div>
 
       {/* Footer Links */}
@@ -242,14 +255,6 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
         >
           {t('feedback')}
         </a>
-        <button 
-          onClick={onShowHallOfFame} 
-          className="flex items-center justify-center w-10 h-10 bg-amber-500/10 border border-amber-500/30 rounded-full hover:bg-amber-500/20 hover:text-white transition-all duration-300 focus:outline-none group shadow-lg"
-          title="Hall of Fame"
-          aria-label="View Hall of Fame"
-        >
-          <span className="text-xl group-hover:scale-125 transition-transform">🥇</span>
-        </button>
       </div>
     </div>
   );
