@@ -163,14 +163,18 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearn
           </svg>
           {t('learnMore')}
         </button>
-        {monarch.house !== 'Republic' && onOpenFamilyTree && (
+        {onOpenFamilyTree && (
           <button
             onClick={() => onOpenFamilyTree(monarch)}
-            className="w-full sm:w-auto px-5 py-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/40 font-bold rounded-lg hover:border-amber-400 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-amber-500/30 flex items-center justify-center gap-1.5"
-            aria-label={`View family tree of ${getMonarchName(monarch)}`}
+            className={`w-full sm:w-auto px-5 py-2 font-bold rounded-lg transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none flex items-center justify-center gap-1.5 border ${
+              monarch.house === 'Republic'
+                ? 'bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border-blue-500/40 hover:border-blue-400 focus:ring-4 focus:ring-blue-500/30'
+                : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border-amber-500/40 hover:border-amber-400 focus:ring-4 focus:ring-amber-500/30'
+            }`}
+            aria-label={`View ${monarch.house === 'Republic' ? 'career path' : 'family tree'} of ${getMonarchName(monarch)}`}
           >
-            <span>👑</span>
-            <span>{t('familyTree')}</span>
+            <span>{monarch.house === 'Republic' ? '🏛️' : '👑'}</span>
+            <span>{monarch.house === 'Republic' ? 'Career Path' : t('familyTree')}</span>
           </button>
         )}
         <button

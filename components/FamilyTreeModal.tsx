@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Monarch } from '../types';
 import { useTranslation } from 'react-i18next';
 import { MonarchFamilyTreeView } from './MonarchFamilyTreeView';
+import { PresidentCareerView } from './PresidentCareerView';
 
 interface FamilyTreeModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
 
   // Filter out Republic presidents, keep royal houses
   const royalMonarchs = monarchs.filter(m => m.house !== 'Republic');
+  const presidentMonarchs = monarchs.filter(m => m.house === 'Republic');
 
   const [activeView, setActiveView] = useState<'overview' | 'monarch'>('overview');
   const [selectedMonarch, setSelectedMonarch] = useState<Monarch>(royalMonarchs[0] || monarchs[0]);
@@ -233,12 +235,21 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
 
         {/* BODY CONTENT */}
         {activeView === 'monarch' ? (
-          <MonarchFamilyTreeView
-            selectedMonarch={selectedMonarch}
-            allMonarchs={monarchs}
-            onSelectMonarch={handleSelectMonarch}
-            onBackToOverview={() => setActiveView('overview')}
-          />
+          selectedMonarch.house === 'Republic' ? (
+             <PresidentCareerView
+               selectedPresident={selectedMonarch}
+               allPresidents={presidentMonarchs}
+               onSelectPresident={handleSelectMonarch}
+               onBackToOverview={() => setActiveView('overview')}
+             />
+          ) : (
+            <MonarchFamilyTreeView
+              selectedMonarch={selectedMonarch}
+              allMonarchs={monarchs}
+              onSelectMonarch={handleSelectMonarch}
+              onBackToOverview={() => setActiveView('overview')}
+            />
+          )
         ) : (
           <div
             className="flex-1 overflow-hidden relative bg-slate-900/90 cursor-grab active:cursor-grabbing"

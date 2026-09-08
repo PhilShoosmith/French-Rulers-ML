@@ -90,8 +90,26 @@ export interface SpouseUnion {
   children: ChildData[];
 }
 
-export interface MonarchGenealogy {
+export interface CareerStage {
+  yearStart: number;
+  yearEnd?: number;
+  role: string;
+  roleFr?: string;
+  organization?: string;
+  organizationFr?: string;
+  type: 'education' | 'military' | 'civil' | 'political';
+  description?: string;
+  descriptionFr?: string;
+}
+
+export interface PresidentCareer {
   monarchId: number;
+  educationSummary?: string;
+  educationSummaryFr?: string;
+  stages: CareerStage[];
+}
+
+export interface MonarchGenealogy {
   monarchName: string;
   house: string;
   parents?: {

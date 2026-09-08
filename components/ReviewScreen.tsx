@@ -43,17 +43,22 @@ const ReviewMonarchCard: React.FC<{
                     <span className="text-xs text-blue-400 font-semibold">
                         {t('learn')} →
                     </span>
-                    {monarch.house !== 'Republic' && onOpenFamilyTree && (
+                    {onOpenFamilyTree && (
                         <button
                             type="button"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onOpenFamilyTree(monarch);
                             }}
-                            className="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-semibold transition-colors flex items-center gap-1 shadow-sm"
-                            title={t('viewFamilyTree')}
+                            className={`text-xs px-2.5 py-1 rounded-full font-semibold transition-colors flex items-center gap-1 shadow-sm border ${
+                                monarch.house === 'Republic' 
+                                    ? 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border-blue-500/30'
+                                    : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border-amber-500/30'
+                            }`}
+                            title={monarch.house === 'Republic' ? 'Career Path' : t('viewFamilyTree')}
                         >
-                            <span>👑</span> {t('familyTree')}
+                            <span>{monarch.house === 'Republic' ? '🏛️' : '👑'}</span> 
+                            {monarch.house === 'Republic' ? 'Career' : t('familyTree')}
                         </button>
                     )}
                 </div>
@@ -163,7 +168,7 @@ const ReviewScreen: React.FC<{
                     <div className="flex justify-end flex-shrink-0 items-center gap-2">
                         {onOpenFamilyTree && (
                             <button
-                                onClick={() => onOpenFamilyTree(monarchs[0])}
+                                onClick={() => onOpenFamilyTree()}
                                 className="px-3 sm:px-4 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/40 font-bold rounded-lg transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg inline-flex items-center gap-1.5"
                                 title={t('familyTree')}
                             >
