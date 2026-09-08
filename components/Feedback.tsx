@@ -11,9 +11,10 @@ interface FeedbackProps {
   allMonarchs: Monarch[];
   onLearnMore: (monarch: Monarch) => void;
   onStop: () => void;
+  onOpenFamilyTree?: (monarch: Monarch) => void;
 }
 
-const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearnMore, allMonarchs, onStop }) => {
+const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearnMore, allMonarchs, onStop, onOpenFamilyTree }) => {
   const { t, i18n } = useTranslation();
 
   const getMonarchName = (m?: Monarch) => {
@@ -162,6 +163,16 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearn
           </svg>
           {t('learnMore')}
         </button>
+        {monarch.house !== 'Republic' && onOpenFamilyTree && (
+          <button
+            onClick={() => onOpenFamilyTree(monarch)}
+            className="w-full sm:w-auto px-5 py-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/40 font-bold rounded-lg hover:border-amber-400 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-amber-500/30 flex items-center justify-center gap-1.5"
+            aria-label={`View family tree of ${getMonarchName(monarch)}`}
+          >
+            <span>👑</span>
+            <span>{t('familyTree')}</span>
+          </button>
+        )}
         <button
           onClick={onStop}
           className="w-full sm:w-auto px-6 py-2 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-red-500/50 flex items-center justify-center gap-2"

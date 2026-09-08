@@ -66,3 +66,39 @@ export interface LastRulerGuess {
 }
 
 export type AnyLastGuess = LastYearGuess | LastMonarchGuess | LastRulerGuess;
+
+export interface SpouseData {
+  name: string;
+  nameFr?: string;
+  marriageYear?: string | number;
+  origin?: string;
+  notes?: string;
+}
+
+export interface ChildData {
+  name: string;
+  nameFr?: string;
+  birthDeath?: string;
+  title?: string;
+  becameMonarch?: boolean;
+  monarchId?: number; // References Monarch.id if they are in allMonarchs
+  notes?: string;
+}
+
+export interface SpouseUnion {
+  spouse: SpouseData;
+  children: ChildData[];
+}
+
+export interface MonarchGenealogy {
+  monarchId: number;
+  monarchName: string;
+  house: string;
+  parents?: {
+    father?: { name: string; monarchId?: number; title?: string };
+    mother?: { name: string; title?: string };
+  };
+  unions: SpouseUnion[];
+  otherChildren?: ChildData[];
+  bioSummary?: string;
+}

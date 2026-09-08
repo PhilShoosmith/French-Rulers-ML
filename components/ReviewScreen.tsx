@@ -7,7 +7,11 @@ import { FastForward, Rewind, Play, Pause } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 // A simplified card specifically for the review screen carousel.
-const ReviewMonarchCard: React.FC<{ monarch: Monarch; onLearnMore: (monarch: Monarch) => void; }> = ({ monarch, onLearnMore }) => {
+const ReviewMonarchCard: React.FC<{ 
+    monarch: Monarch; 
+    onLearnMore: (monarch: Monarch) => void; 
+    onOpenFamilyTree?: (monarch: Monarch) => void;
+}> = ({ monarch, onLearnMore, onOpenFamilyTree }) => {
     const { t, i18n } = useTranslation();
     const reignEndDisplay = monarch.reignEnd ?? t('present');
 
@@ -35,12 +39,35 @@ const ReviewMonarchCard: React.FC<{ monarch: Monarch; onLearnMore: (monarch: Mon
                 <div className="text-sm md:text-base leading-snug md:leading-relaxed text-slate-300 mt-2 md:mt-4 flex-grow overflow-y-auto pr-2 custom-scrollbar">
                    <p>{displayContext}</p>
                 </div>
+                <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-700/60 flex-shrink-0">
+                    <span className="text-xs text-blue-400 font-semibold">
+                        {t('learn')} →
+                    </span>
+                    {monarch.house !== 'Republic' && onOpenFamilyTree && (
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onOpenFamilyTree(monarch);
+                            }}
+                            className="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-semibold transition-colors flex items-center gap-1 shadow-sm"
+                            title={t('viewFamilyTree')}
+                        >
+                            <span>👑</span> {t('familyTree')}
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );
 };
 
-const ReviewScreen: React.FC<{ monarchs: Monarch[]; onBack: () => void; onLearnMore: (monarch: Monarch) => void; }> = ({ monarchs, onBack, onLearnMore }) => {
+const ReviewScreen: React.FC<{ 
+    monarchs: Monarch[]; 
+    onBack: () => void; 
+    onLearnMore: (monarch: Monarch) => void; 
+    onOpenFamilyTree?: (monarch: Monarch) => void;
+}> = ({ monarchs, onBack, onLearnMore, onOpenFamilyTree }) => {
     const { t, i18n } = useTranslation();
     const [isPaused, setIsPaused] = useState(false);
     const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
@@ -133,7 +160,17 @@ const ReviewScreen: React.FC<{ monarchs: Monarch[]; onBack: () => void; onLearnM
                         </h1>
                     </div>
 
-                    <div className="flex justify-end flex-shrink-0">
+                    <div className="flex justify-end flex-shrink-0 items-center gap-2">
+                        {onOpenFamilyTree && (
+                            <button
+                                onClick={() => onOpenFamilyTree(monarchs[0])}
+                                className="px-3 sm:px-4 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/40 font-bold rounded-lg transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg inline-flex items-center gap-1.5"
+                                title={t('familyTree')}
+                            >
+                                <span>👑</span>
+                                <span className="hidden md:inline">{t('familyTree')}</span>
+                            </button>
+                        )}
                          <button
                             onClick={() => setIsSearchPopupOpen(true)}
                             className="px-3 sm:px-4 py-1.5 text-sm bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 inline-flex items-center gap-2"
@@ -162,7 +199,7 @@ const ReviewScreen: React.FC<{ monarchs: Monarch[]; onBack: () => void; onLearnM
                         {filteredMonarchs.length > 0 ? (
                             <div className="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto pb-20">
                                 {filteredMonarchs.map((monarch) => (
-                                    <ReviewMonarchCard key={monarch.id} monarch={monarch} onLearnMore={onLearnMore} />
+                                    <ReviewMonarchCard key={monarch.id} monarch={monarch} onLearnMore={onLearnMore} onOpenFamilyTree={onOpenFamilyTree} />
                                 ))}
                             </div>
                         ) : (
@@ -192,7 +229,7 @@ const ReviewScreen: React.FC<{ monarchs: Monarch[]; onBack: () => void; onLearnM
                                 }}
                             >
                                 {displayMonarchs.map((monarch, index) => (
-                                    <ReviewMonarchCard key={`${monarch.id}-${index}`} monarch={monarch} onLearnMore={onLearnMore} />
+                                    <ReviewMonarchCard key={`${monarch.id}-${index}`} monarch={monarch} onLearnMore={onLearnMore} onOpenFamilyTree={onOpenFamilyTree} />
                                 ))}
                             </div>
                         </div>

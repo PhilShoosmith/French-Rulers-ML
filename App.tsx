@@ -212,6 +212,18 @@ const App: React.FC = () => {
   const [isTermsOpen, setIsTermsOpen] = useState<boolean>(false);
   const [isHallOfFameOpen, setIsHallOfFameOpen] = useState<boolean>(false);
   const [isFamilyTreeOpen, setIsFamilyTreeOpen] = useState<boolean>(false);
+  const [familyTreeMonarchId, setFamilyTreeMonarchId] = useState<number | null>(null);
+
+  const handleOpenFamilyTree = (monarch?: Monarch | number) => {
+    if (typeof monarch === 'number') {
+      setFamilyTreeMonarchId(monarch);
+    } else if (monarch && typeof monarch === 'object') {
+      setFamilyTreeMonarchId(monarch.id);
+    } else {
+      setFamilyTreeMonarchId(null);
+    }
+    setIsFamilyTreeOpen(true);
+  };
   
   const [ragContent, setRagContent] = useState<{ title: string; text: string; imageUrl?: string; } | null>(null);
   const [ragSources, setRagSources] = useState<GroundingSource[]>([]);
@@ -595,7 +607,14 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
           />
         );
       case 'review':
-        return <ReviewScreen monarchs={allMonarchsData} onBack={() => setGameState('start')} onLearnMore={handleLearnMore} />;
+        return (
+          <ReviewScreen 
+            monarchs={allMonarchsData} 
+            onBack={() => setGameState('start')} 
+            onLearnMore={handleLearnMore} 
+            onOpenFamilyTree={handleOpenFamilyTree}
+          />
+        );
       case 'end':
         return (
           <EndScreen 
@@ -690,7 +709,15 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
 
               <div className="w-full lg:max-w-md mt-8 lg:mt-0">
                 {gameState === 'feedback' && lastGuess ? (
-                  <Feedback lastGuess={lastGuess} onNext={nextRound} monarch={currentMonarch} onLearnMore={handleLearnMore} allMonarchs={allMonarchsData} onStop={handleStopGame} />
+                  <Feedback 
+                    lastGuess={lastGuess} 
+                    onNext={nextRound} 
+                    monarch={currentMonarch} 
+                    onLearnMore={handleLearnMore} 
+                    allMonarchs={allMonarchsData} 
+                    onStop={handleStopGame} 
+                    onOpenFamilyTree={handleOpenFamilyTree}
+                  />
                 ) : (
                    <>
                     {gameMode === 'year' && (
@@ -770,8 +797,12 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
       />
       <FamilyTreeModal
         isOpen={isFamilyTreeOpen}
-        onClose={() => setIsFamilyTreeOpen(false)}
+        onClose={() => {
+          setIsFamilyTreeOpen(false);
+          setFamilyTreeMonarchId(null);
+        }}
         monarchs={allMonarchsData}
+        initialMonarchId={familyTreeMonarchId}
       />
     </main>
   );
