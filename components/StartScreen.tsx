@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Monarch, GameMode } from '../types';
 import { useTranslation } from 'react-i18next';
+import { RefreshCw } from 'lucide-react';
 
 interface StartScreenProps {
   onStart: (mode: GameMode) => void;
@@ -19,10 +20,33 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  const [dailyFactMonarch] = useState(() => {
+  const [dailyFactMonarch, setDailyFactMonarch] = useState<Monarch | null>(() => {
     if (!monarchs || monarchs.length === 0) return null;
-    return monarchs[Math.floor(Math.random() * monarchs.length)];
+    const withContext = monarchs.filter(m => m.context && m.context.trim().length > 0);
+    const pool = withContext.length > 0 ? withContext : monarchs;
+    return pool[Math.floor(Math.random() * pool.length)];
   });
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshFact = () => {
+    if (!monarchs || monarchs.length <= 1) return;
+    const withContext = monarchs.filter(m => m.context && m.context.trim().length > 0);
+    const pool = withContext.length > 0 ? withContext : monarchs;
+    
+    setIsRefreshing(true);
+    let next = pool[Math.floor(Math.random() * pool.length)];
+    let attempts = 0;
+    while (dailyFactMonarch && next.id === dailyFactMonarch.id && attempts < 15) {
+      next = pool[Math.floor(Math.random() * pool.length)];
+      attempts++;
+    }
+
+    setTimeout(() => {
+      setDailyFactMonarch(next);
+      setIsRefreshing(false);
+    }, 200);
+  };
 
   const { displayFactName, displayFactContext } = React.useMemo(() => {
     if (!dailyFactMonarch) return { displayFactName: '', displayFactContext: '' };
@@ -261,19 +285,33 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
           {/* Daily Historical Fact Banner */}
           {dailyFactMonarch && (
             <div className="w-full max-w-4xl mx-auto px-4 mt-8 animate-fade-in-up animation-delay-800 flex-shrink-0">
-              <div className="bg-slate-800/90 backdrop-blur-md border border-slate-600 shadow-xl rounded-xl p-3 md:p-4 flex flex-col md:flex-row gap-3 items-center mx-auto max-w-3xl">
+              <div className="bg-slate-800/90 backdrop-blur-md border border-slate-600 shadow-xl rounded-xl p-3 md:p-4 flex flex-row gap-3 items-center mx-auto max-w-3xl">
                 <div className="flex-shrink-0 bg-blue-500/20 text-blue-400 rounded-full p-2 hidden sm:block">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div className="flex-grow text-center sm:text-left flex flex-col justify-center">
+                <div className="flex-grow min-w-0 text-left flex flex-col justify-center">
                   <h4 className="text-[10px] md:text-xs font-bold text-amber-400 uppercase tracking-widest mb-0.5">{t('dailyFact') || 'Daily Historical Fact'}</h4>
-                  <p className="text-slate-300 text-xs sm:text-sm italic leading-snug line-clamp-2 md:line-clamp-none">
+                  <p className={`text-slate-300 text-xs sm:text-sm italic leading-snug line-clamp-2 md:line-clamp-none transition-opacity duration-200 ${isRefreshing ? 'opacity-30' : 'opacity-100'}`}>
                     "{displayFactContext}"
                     <span className="inline-block ml-1 font-semibold text-slate-400 not-italic whitespace-nowrap">— {displayFactName}</span>
                   </p>
                 </div>
+                <button
+                  type="button"
+                  onClick={handleRefreshFact}
+                  disabled={isRefreshing}
+                  className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-slate-700/80 hover:bg-slate-700 active:bg-slate-600 text-slate-200 hover:text-amber-300 border border-slate-600 hover:border-amber-500/50 transition-all duration-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-400/40 cursor-pointer shadow-md group disabled:opacity-50"
+                  title={t('refreshFact') || 'Show another historical fact'}
+                  aria-label={t('refreshFact') || 'Show another historical fact'}
+                >
+                  <RefreshCw
+                    size={14}
+                    className={`transition-transform duration-500 ${isRefreshing ? 'animate-spin text-amber-400' : 'group-hover:rotate-180 text-slate-400 group-hover:text-amber-300'}`}
+                  />
+                  <span className="hidden sm:inline font-medium">{t('refresh') || 'Refresh'}</span>
+                </button>
               </div>
             </div>
           )}

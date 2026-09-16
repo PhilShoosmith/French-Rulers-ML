@@ -110,6 +110,7 @@ export interface PresidentCareer {
 }
 
 export interface MonarchGenealogy {
+  monarchId?: number;
   monarchName: string;
   house: string;
   parents?: {
