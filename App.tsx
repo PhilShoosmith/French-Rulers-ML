@@ -201,6 +201,24 @@ const App: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timeLeftRef = useRef<number>(timeLeft);
 
+  // Preload images in the background to speed up rendering when gameplay starts
+  useEffect(() => {
+    const preloadTimeout = setTimeout(() => {
+      const urlsToPreload = new Set<string>();
+      allMonarchs.forEach(m => {
+        if (m.imageUrl) urlsToPreload.add(m.imageUrl);
+        if (m.coatOfArmsUrl) urlsToPreload.add(m.coatOfArmsUrl);
+      });
+      
+      urlsToPreload.forEach(url => {
+        const img = new Image();
+        img.src = url;
+      });
+    }, 1000); // 1-second delay so we don't block the initial React mount
+    
+    return () => clearTimeout(preloadTimeout);
+  }, []);
+
   const [stagedPortraitChanges, setStagedPortraitChanges] = useState<Record<number, string>>({});
   const [saveMessage, setSaveMessage] = useState<string>('');
   const [uploadMessage, setUploadMessage] = useState<string>('');
@@ -628,7 +646,8 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
       case 'playing':
       case 'feedback':
         if (!currentMonarch) return null;
-        const incorrectAnswers = currentRound - score;
+        const totalAnswered = gameState === 'feedback' ? currentRound + 1 : currentRound;
+        const incorrectAnswers = Math.max(0, totalAnswered - score);
         return (
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between min-h-[100dvh] pt-16 sm:pt-24 pb-2 sm:pb-4">
             {isAdmin && (

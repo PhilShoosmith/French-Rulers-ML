@@ -29,7 +29,6 @@ const ReviewMonarchCard: React.FC<{
                     src={monarch.imageUrl}
                     alt={`Portrait of ${displayName}`}
                     className="w-full h-full object-contain rounded-xl bg-slate-700"
-                    loading="lazy"
                 />
             </div>
             <div className="flex flex-col flex-grow overflow-hidden">
@@ -122,6 +121,17 @@ const ReviewScreen: React.FC<{
         if (scrollRef.current) {
             const animations = scrollRef.current.getAnimations();
             animations.forEach(anim => {
+                const duration = Number(anim.effect?.getTiming().duration) || 0;
+                
+                // If the animation time gets dangerously close to 0 (meaning we can't scroll backwards much further),
+                // we safely jump ahead by 1000 iterations. This is visually seamless because the timeline repeats precisely.
+                if (anim.currentTime !== null && duration > 0) {
+                    const currentIteration = Math.floor((anim.currentTime as number) / duration);
+                    if (currentIteration < 10) {
+                        anim.currentTime = (anim.currentTime as number) + (duration * 1000);
+                    }
+                }
+
                 anim.playbackRate = (animationDirection === 'reverse' ? -1 : 1) * speedMultiplier;
                 if (isPaused) {
                     anim.pause();
@@ -131,6 +141,35 @@ const ReviewScreen: React.FC<{
             });
         }
     }, [speedMultiplier, animationDirection, isPaused]);
+
+    const handleForward = () => {
+        setIsPaused(false);
+        if (animationDirection === 'reverse') {
+            setAnimationDirection('normal');
+            setSpeedMultiplier(1);
+        } else {
+            setSpeedMultiplier(prev => (prev >= 8 ? 8 : prev === 1 ? 2 : prev * 2));
+        }
+    };
+
+    const handleReverse = () => {
+        setIsPaused(false);
+        if (animationDirection === 'normal') {
+            setAnimationDirection('reverse');
+            setSpeedMultiplier(1);
+        } else {
+            setSpeedMultiplier(prev => (prev >= 8 ? 8 : prev === 1 ? 2 : prev * 2));
+        }
+    };
+
+    const handlePlayPause = () => {
+        if (isPaused) {
+            setIsPaused(false);
+            setSpeedMultiplier(1);
+        } else {
+            setIsPaused(true);
+        }
+    };
 
     const renderActiveFiltersText = () => {
         const parts = [];
@@ -159,10 +198,15 @@ const ReviewScreen: React.FC<{
                         </button>
                     </div>
 
-                    <div className="text-center flex-grow overflow-hidden px-2">
-                        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 animate-fade-in-up truncate">
+                    <div className="text-center flex-grow overflow-hidden px-2 flex flex-col items-center justify-center">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 animate-fade-in-up truncate w-full">
                             {t('reviewRulers')}
                         </h1>
+                        <p className="text-slate-400 text-xs animate-fade-in-up animation-delay-200 mt-1">
+                             {isSearching
+                                ? <>{t('foundResults', { count: filteredMonarchs.length })} <span className="text-slate-200">{renderActiveFiltersText()}</span>.</>
+                                : t('hoverToPause')}
+                        </p>
                     </div>
 
                     <div className="flex justify-end flex-shrink-0 items-center gap-2">
@@ -187,14 +231,6 @@ const ReviewScreen: React.FC<{
                             <span className="hidden md:inline">{t('searchFilter')}</span>
                         </button>
                     </div>
-                </div>
-                
-                <div className="w-full text-center mt-2">
-                    <p className="text-slate-400 text-xs animate-fade-in-up animation-delay-200">
-                         {isSearching
-                            ? <>{t('foundResults', { count: filteredMonarchs.length })} <span className="text-slate-200">{renderActiveFiltersText()}</span>.</>
-                            : t('hoverToPause')}
-                    </p>
                 </div>
             </header>
             
@@ -240,37 +276,35 @@ const ReviewScreen: React.FC<{
                         </div>
 
                         {/* Carousel Controls */}
-                        <div className="mt-4 mx-auto z-40 flex items-center gap-3 bg-slate-800/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-700 shadow-2xl animate-fade-in-up">
+                        <div className="mt-4 mx-auto z-40 flex items-center gap-4 bg-slate-800/90 backdrop-blur-xl px-6 py-3 rounded-full border border-slate-600 shadow-2xl animate-fade-in-up">
                             <button 
-                                onMouseDown={() => { setAnimationDirection('reverse'); setSpeedMultiplier(5); }}
-                                onMouseUp={() => { setAnimationDirection('normal'); setSpeedMultiplier(1); }}
-                                onMouseLeave={() => { setAnimationDirection('normal'); setSpeedMultiplier(1); }}
-                                onTouchStart={() => { setAnimationDirection('reverse'); setSpeedMultiplier(5); }}
-                                onTouchEnd={() => { setAnimationDirection('normal'); setSpeedMultiplier(1); }}
-                                className="p-1 text-slate-300 hover:text-blue-400 transition-colors"
-                                title="Fast Reverse (Hold)"
+                                onClick={handleReverse}
+                                className={`flex items-center gap-1 p-2 rounded-full transition-all ${animationDirection === 'reverse' && speedMultiplier > 1 ? 'text-blue-400 bg-blue-500/10' : 'text-slate-300 hover:text-white hover:bg-slate-700'}`}
+                                title="Rewind"
                             >
-                                <Rewind size={12} fill={animationDirection === 'reverse' ? 'currentColor' : 'none'} />
+                                <Rewind size={18} fill={animationDirection === 'reverse' && speedMultiplier > 1 ? 'currentColor' : 'none'} />
+                                {animationDirection === 'reverse' && speedMultiplier > 1 && (
+                                    <span className="text-xs font-bold">{speedMultiplier}x</span>
+                                )}
                             </button>
 
                             <button 
-                                onClick={() => setIsPaused(!isPaused)}
-                                className="p-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all transform hover:scale-110 shadow-lg"
+                                onClick={handlePlayPause}
+                                className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all transform hover:scale-110 shadow-[0_0_15px_rgba(37,99,235,0.5)]"
                                 title={isPaused ? "Play" : "Pause"}
                             >
-                                {isPaused ? <Play size={10} fill="white" /> : <Pause size={10} fill="white" />}
+                                {isPaused ? <Play size={18} fill="white" className="ml-1" /> : <Pause size={18} fill="white" />}
                             </button>
 
                             <button 
-                                onMouseDown={() => { setAnimationDirection('normal'); setSpeedMultiplier(5); }}
-                                onMouseUp={() => { setAnimationDirection('normal'); setSpeedMultiplier(1); }}
-                                onMouseLeave={() => { setAnimationDirection('normal'); setSpeedMultiplier(1); }}
-                                onTouchStart={() => { setAnimationDirection('normal'); setSpeedMultiplier(5); }}
-                                onTouchEnd={() => { setAnimationDirection('normal'); setSpeedMultiplier(1); }}
-                                className="p-1 text-slate-300 hover:text-blue-400 transition-colors"
-                                title="Fast Forward (Hold)"
+                                onClick={handleForward}
+                                className={`flex items-center gap-1 p-2 rounded-full transition-all ${animationDirection === 'normal' && speedMultiplier > 1 ? 'text-blue-400 bg-blue-500/10' : 'text-slate-300 hover:text-white hover:bg-slate-700'}`}
+                                title="Fast Forward"
                             >
-                                <FastForward size={12} fill={animationDirection === 'normal' && speedMultiplier > 1 ? 'currentColor' : 'none'} />
+                                {animationDirection === 'normal' && speedMultiplier > 1 && (
+                                    <span className="text-xs font-bold">{speedMultiplier}x</span>
+                                )}
+                                <FastForward size={18} fill={animationDirection === 'normal' && speedMultiplier > 1 ? 'currentColor' : 'none'} />
                             </button>
                         </div>
                     </div>

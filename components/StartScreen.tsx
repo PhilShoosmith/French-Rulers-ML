@@ -19,6 +19,18 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
+  const [dailyFactMonarch] = useState(() => {
+    if (!monarchs || monarchs.length === 0) return null;
+    return monarchs[Math.floor(Math.random() * monarchs.length)];
+  });
+
+  const { displayFactName, displayFactContext } = React.useMemo(() => {
+    if (!dailyFactMonarch) return { displayFactName: '', displayFactContext: '' };
+    const name = i18n.language === 'fr' && dailyFactMonarch.nameFr ? dailyFactMonarch.nameFr : i18n.language === 'ja' && dailyFactMonarch.nameJa ? dailyFactMonarch.nameJa : i18n.language === 'zh' && dailyFactMonarch.nameZh ? dailyFactMonarch.nameZh : i18n.language === 'es' && dailyFactMonarch.nameEs ? dailyFactMonarch.nameEs : i18n.language === 'hi' && dailyFactMonarch.nameHi ? dailyFactMonarch.nameHi : i18n.language === 'ar' && dailyFactMonarch.nameAr ? dailyFactMonarch.nameAr : dailyFactMonarch.name;
+    const context = i18n.language === 'fr' && dailyFactMonarch.contextFr ? dailyFactMonarch.contextFr : i18n.language === 'ja' && dailyFactMonarch.contextJa ? dailyFactMonarch.contextJa : i18n.language === 'zh' && dailyFactMonarch.contextZh ? dailyFactMonarch.contextZh : i18n.language === 'es' && dailyFactMonarch.contextEs ? dailyFactMonarch.contextEs : i18n.language === 'hi' && dailyFactMonarch.contextHi ? dailyFactMonarch.contextHi : i18n.language === 'ar' && dailyFactMonarch.contextAr ? dailyFactMonarch.contextAr : dailyFactMonarch.context;
+    return { displayFactName: name, displayFactContext: context };
+  }, [dailyFactMonarch, i18n.language]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
@@ -56,7 +68,6 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
                 src={portrait.url} 
                 alt={portrait.name} 
                 className="w-full h-full object-cover rounded-lg shadow-lg" 
-                loading="lazy"
               />
             </div>
           ))}
@@ -244,6 +255,26 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
           </button>
         </div>
       </div>
+
+      {/* Daily Historical Fact Banner */}
+      {dailyFactMonarch && (
+        <div className="absolute bottom-12 md:bottom-16 w-full max-w-4xl mx-auto px-4 z-20 animate-fade-in-up animation-delay-800 pointer-events-none">
+          <div className="bg-slate-800/90 backdrop-blur-md border border-slate-600 shadow-xl rounded-xl p-3 md:p-4 flex flex-col md:flex-row gap-3 items-center mx-auto max-w-3xl pointer-events-auto">
+            <div className="flex-shrink-0 bg-blue-500/20 text-blue-400 rounded-full p-2 hidden sm:block">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-grow text-center sm:text-left flex flex-col justify-center">
+              <h4 className="text-[10px] md:text-xs font-bold text-amber-400 uppercase tracking-widest mb-0.5">{t('dailyFact') || 'Daily Historical Fact'}</h4>
+              <p className="text-slate-300 text-xs sm:text-sm italic leading-snug line-clamp-2 md:line-clamp-none">
+                "{displayFactContext}"
+                <span className="inline-block ml-1 font-semibold text-slate-400 not-italic whitespace-nowrap">— {displayFactName}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer Links */}
       <div className="absolute bottom-4 z-20 flex flex-wrap items-center justify-center gap-6 text-slate-400 text-xs sm:text-sm animate-fade-in animation-delay-1000">

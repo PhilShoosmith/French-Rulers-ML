@@ -98,7 +98,7 @@ const MonarchCard: React.FC<MonarchCardProps> = ({ monarch, showReign, isAdmin, 
               src={displayImageUrl} 
               alt={`Portrait of ${displayName}`} 
               className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
+              fetchPriority="high"
               key={displayImageUrl}
             />
           ) : (
