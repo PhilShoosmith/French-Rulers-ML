@@ -176,105 +176,108 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
         )}
       </div>
 
-      {/* Main Content Card */}
-      <div className="relative text-center p-6 md:p-8 bg-slate-800/80 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 max-w-2xl mx-auto z-10 w-11/12 max-h-[90vh] overflow-y-auto">
-        <h1 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 animate-fade-in-up leading-tight">
-          {t('titleMain')}<br />{t('titleSub')}
-        </h1>
-        <p className="text-base md:text-lg text-slate-300 mb-4 md:mb-6 animate-fade-in-up animation-delay-200">
-          {t('subtitle')}
-        </p>
-        
-        <div className="flex flex-col md:flex-row items-stretch justify-center gap-4 md:gap-8 mt-4 md:mt-8 animate-fade-in-up animation-delay-400">
-            {/* Column 1: Learning/Info */}
-            <div className="flex flex-col items-center gap-3 flex-1">
-                <h3 className="text-amber-500 font-bold uppercase tracking-widest text-xs md:text-sm mb-1">{t('learn')}</h3>
-                <button
-                  onClick={onShowInstructions}
-                  className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-300 transition-all duration-300 ease-in-out shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-400/50 border border-yellow-500"
-                  aria-label="Show game instructions"
-                >
-                  {t('howToPlay')}
-                </button>
-                <button
-                  onClick={onStartReview}
-                  className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-300 transition-all duration-300 ease-in-out shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-400/50 border border-yellow-500"
-                  aria-label="Review all leaders"
-                >
-                  {t('reviewLeaders')}
-                </button>
-                <button
-                  onClick={onShowFamilyTree}
-                  className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-300 transition-all duration-300 ease-in-out shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-400/50 border border-yellow-500"
-                  aria-label="View Royal Family Tree"
-                >
-                  {t('familyTree')}
-                </button>
-            </div>
-
-            {/* Divider for desktop */}
-            <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-slate-500 to-transparent"></div>
+      {/* Content wrapper to vertically center both elements without overlapping */}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center pt-8 pb-20 md:pb-24 overflow-y-auto">
+          {/* Main Content Card */}
+          <div className="text-center p-6 md:p-8 bg-slate-800/80 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 max-w-2xl w-11/12 mx-auto flex-shrink-0">
+            <h1 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 animate-fade-in-up leading-tight">
+              {t('titleMain')}<br />{t('titleSub')}
+            </h1>
+            <p className="text-base md:text-lg text-slate-300 mb-4 md:mb-6 animate-fade-in-up animation-delay-200">
+              {t('subtitle')}
+            </p>
             
-            {/* Divider for mobile */}
-            <div className="md:hidden h-px w-full bg-gradient-to-r from-transparent via-slate-500 to-transparent my-1"></div>
+            <div className="flex flex-col md:flex-row items-stretch justify-center gap-4 md:gap-8 mt-4 md:mt-8 animate-fade-in-up animation-delay-400">
+                {/* Column 1: Learning/Info */}
+                <div className="flex flex-col items-center gap-3 flex-1">
+                    <h3 className="text-amber-500 font-bold uppercase tracking-widest text-xs md:text-sm mb-1">{t('learn')}</h3>
+                    <button
+                      onClick={onShowInstructions}
+                      className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-300 transition-all duration-300 ease-in-out shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-400/50 border border-yellow-500"
+                      aria-label="Show game instructions"
+                    >
+                      {t('howToPlay')}
+                    </button>
+                    <button
+                      onClick={onStartReview}
+                      className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-300 transition-all duration-300 ease-in-out shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-400/50 border border-yellow-500"
+                      aria-label="Review all leaders"
+                    >
+                      {t('reviewLeaders')}
+                    </button>
+                    <button
+                      onClick={onShowFamilyTree}
+                      className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-yellow-400 text-slate-900 font-bold rounded-xl hover:bg-yellow-300 transition-all duration-300 ease-in-out shadow-md focus:outline-none focus:ring-4 focus:ring-yellow-400/50 border border-yellow-500"
+                      aria-label="View Royal Family Tree"
+                    >
+                      {t('familyTree')}
+                    </button>
+                </div>
 
-            {/* Column 2: Play Modes */}
-            <div className="flex flex-col items-center gap-3 flex-1">
-                <h3 className="text-blue-400 font-bold uppercase tracking-widest text-xs md:text-sm mb-1">{t('play')}</h3>
-                <button
-                    onClick={() => onStart('ruler')}
-                    className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-                >
-                    {t('guessRuler')}
-                </button>
-                <button
-                    onClick={() => onStart('year')}
-                    className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-                >
-                    {t('guessYear')}
-                </button>
-                <button
-                    onClick={() => onStart('monarch')}
-                    className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-                >
-                    {t('guessSuccessor')}
-                </button>
+                {/* Divider for desktop */}
+                <div className="hidden md:block w-px bg-gradient-to-b from-transparent via-slate-500 to-transparent"></div>
+                
+                {/* Divider for mobile */}
+                <div className="md:hidden h-px w-full bg-gradient-to-r from-transparent via-slate-500 to-transparent my-1"></div>
+
+                {/* Column 2: Play Modes */}
+                <div className="flex flex-col items-center gap-3 flex-1">
+                    <h3 className="text-blue-400 font-bold uppercase tracking-widest text-xs md:text-sm mb-1">{t('play')}</h3>
+                    <button
+                        onClick={() => onStart('ruler')}
+                        className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+                    >
+                        {t('guessRuler')}
+                    </button>
+                    <button
+                        onClick={() => onStart('year')}
+                        className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+                    >
+                        {t('guessYear')}
+                    </button>
+                    <button
+                        onClick={() => onStart('monarch')}
+                        className="w-full max-w-[200px] md:max-w-[240px] px-4 py-2 md:px-6 md:py-3 text-sm md:text-base bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+                    >
+                        {t('guessSuccessor')}
+                    </button>
+                </div>
             </div>
-        </div>
 
-        {/* Hall of fame */}
-        <div className="mt-8 pt-6 border-t border-slate-700/50 flex flex-row items-center justify-center gap-3 animate-fade-in-up animation-delay-600">
-          <span className="text-slate-300 font-bold uppercase tracking-widest text-sm md:text-base">Hall of Fame &rarr;</span>
-          <button 
-            onClick={onShowHallOfFame} 
-            className="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-full hover:bg-amber-500/20 hover:text-white transition-all duration-300 focus:outline-none group shadow-lg"
-            title="Hall of Fame"
-            aria-label="View Hall of Fame"
-          >
-            <span className="text-2xl group-hover:scale-125 transition-transform">🥇</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Daily Historical Fact Banner */}
-      {dailyFactMonarch && (
-        <div className="absolute bottom-12 md:bottom-16 w-full max-w-4xl mx-auto px-4 z-20 animate-fade-in-up animation-delay-800 pointer-events-none">
-          <div className="bg-slate-800/90 backdrop-blur-md border border-slate-600 shadow-xl rounded-xl p-3 md:p-4 flex flex-col md:flex-row gap-3 items-center mx-auto max-w-3xl pointer-events-auto">
-            <div className="flex-shrink-0 bg-blue-500/20 text-blue-400 rounded-full p-2 hidden sm:block">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="flex-grow text-center sm:text-left flex flex-col justify-center">
-              <h4 className="text-[10px] md:text-xs font-bold text-amber-400 uppercase tracking-widest mb-0.5">{t('dailyFact') || 'Daily Historical Fact'}</h4>
-              <p className="text-slate-300 text-xs sm:text-sm italic leading-snug line-clamp-2 md:line-clamp-none">
-                "{displayFactContext}"
-                <span className="inline-block ml-1 font-semibold text-slate-400 not-italic whitespace-nowrap">— {displayFactName}</span>
-              </p>
+            {/* Hall of fame */}
+            <div className="mt-8 pt-6 border-t border-slate-700/50 flex flex-row items-center justify-center gap-3 animate-fade-in-up animation-delay-600">
+              <span className="text-slate-300 font-bold uppercase tracking-widest text-sm md:text-base">Hall of Fame &rarr;</span>
+              <button 
+                onClick={onShowHallOfFame} 
+                className="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-full hover:bg-amber-500/20 hover:text-white transition-all duration-300 focus:outline-none group shadow-lg"
+                title="Hall of Fame"
+                aria-label="View Hall of Fame"
+              >
+                <span className="text-2xl group-hover:scale-125 transition-transform">🥇</span>
+              </button>
             </div>
           </div>
-        </div>
-      )}
+
+          {/* Daily Historical Fact Banner */}
+          {dailyFactMonarch && (
+            <div className="w-full max-w-4xl mx-auto px-4 mt-8 animate-fade-in-up animation-delay-800 flex-shrink-0">
+              <div className="bg-slate-800/90 backdrop-blur-md border border-slate-600 shadow-xl rounded-xl p-3 md:p-4 flex flex-col md:flex-row gap-3 items-center mx-auto max-w-3xl">
+                <div className="flex-shrink-0 bg-blue-500/20 text-blue-400 rounded-full p-2 hidden sm:block">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="flex-grow text-center sm:text-left flex flex-col justify-center">
+                  <h4 className="text-[10px] md:text-xs font-bold text-amber-400 uppercase tracking-widest mb-0.5">{t('dailyFact') || 'Daily Historical Fact'}</h4>
+                  <p className="text-slate-300 text-xs sm:text-sm italic leading-snug line-clamp-2 md:line-clamp-none">
+                    "{displayFactContext}"
+                    <span className="inline-block ml-1 font-semibold text-slate-400 not-italic whitespace-nowrap">— {displayFactName}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+      </div>
 
       {/* Footer Links */}
       <div className="absolute bottom-4 z-20 flex flex-wrap items-center justify-center gap-6 text-slate-400 text-xs sm:text-sm animate-fade-in animation-delay-1000">
