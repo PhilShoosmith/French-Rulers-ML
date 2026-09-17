@@ -32,6 +32,7 @@ export interface Monarch {
 export type GameState = 'start' | 'playing' | 'feedback' | 'end' | 'review';
 
 export type GameMode = 'year' | 'monarch' | 'ruler';
+export type Timeframe = 'week' | 'month' | 'all';
 
 export interface Score {
   name: string;

@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { GameMode, Score } from '../types';
+import { GameMode, Score, Timeframe } from '../types';
 import { getTopScores } from '../services/scoreService';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Confetti from './Confetti';
 
@@ -14,6 +14,7 @@ interface HallOfFameModalProps {
 const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<GameMode>('year');
+  const [timeframe, setTimeframe] = useState<Timeframe>('all');
   const [scores, setScores] = useState<Score[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -23,13 +24,13 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
     if (isOpen) {
       const fetchScores = async () => {
         setIsLoading(true);
-        const top = await getTopScores(activeTab);
+        const top = await getTopScores(activeTab, timeframe);
         setScores(top);
         setIsLoading(false);
       };
       fetchScores();
     }
-  }, [isOpen, activeTab]);
+  }, [isOpen, activeTab, timeframe]);
 
   useEffect(() => {
     if (isOpen) {
@@ -90,14 +91,32 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
           <source src="https://upload.wikimedia.org/wikipedia/commons/3/30/La_Marseillaise.ogg" type="audio/ogg" />
           <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/3/30/La_Marseillaise.ogg/La_Marseillaise.ogg.mp3" type="audio/mpeg" />
         </audio>
-        <header className="p-6 border-b border-slate-700 flex justify-between items-center">
-          <div>
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">
-              {t('hallOfFame')} 🏆
+        <header className="p-4 sm:p-6 border-b border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 whitespace-nowrap">
+              <span className="text-amber-500 mr-2 drop-shadow-sm">🏆</span>{t('hallOfFame')}
             </h2>
-            <p className="text-slate-400 text-sm mt-1">{t('hallOfFameSubtitle')}</p>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex-1 flex justify-center w-full md:w-auto">
+            <div className="flex bg-slate-900/50 p-1 rounded-lg border border-slate-700/50">
+              {(['week', 'month', 'all'] as Timeframe[]).map((tf) => (
+                <button
+                  key={tf}
+                  onClick={() => setTimeframe(tf)}
+                  className={`px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-md font-medium transition-colors whitespace-nowrap ${
+                    timeframe === tf
+                      ? 'bg-amber-500/20 text-amber-400 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+                  }`}
+                >
+                  {tf === 'week' ? t('lastWeek', 'Last Week') : tf === 'month' ? t('lastMonth', 'Last Month') : t('allTime', 'All-Time Greats')}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center md:justify-end gap-3 sm:gap-4 w-full md:w-auto">
             <button
               onClick={togglePlay}
               className="p-2 rounded-full bg-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-600 transition-colors"
