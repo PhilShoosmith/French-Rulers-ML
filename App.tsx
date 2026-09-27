@@ -19,6 +19,7 @@ import PrivacyPolicyModal from './components/PrivacyPolicyModal';
 import TermsOfServiceModal from './components/TermsOfServiceModal';
 import HallOfFameModal from './components/HallOfFameModal';
 import FamilyTreeModal from './components/FamilyTreeModal';
+import { audioService } from './services/audioService';
 
 interface GroundingSource {
   uri: string;
@@ -270,10 +271,12 @@ const App: React.FC = () => {
       clearInterval(timerIdRef.current);
       timerIdRef.current = null;
     }
+    audioService.stopTimer();
   }, []);
 
   const startGame = useCallback((mode: GameMode) => {
     setShowConfetti(false);
+    audioService.resumeAudio();
     setGameMode(mode);
     const gameMonarchs = mode === 'monarch' 
       ? getSuccessorGameMonarchs(allMonarchsData) 
@@ -289,6 +292,7 @@ const App: React.FC = () => {
   
   const startReview = useCallback(() => {
     setShowConfetti(false);
+    audioService.stopTimer();
     setGameState('review');
   }, []);
 
@@ -296,10 +300,14 @@ const App: React.FC = () => {
   const closeInstructions = useCallback(() => setIsInstructionsOpen(false), []);
 
   const processGuessResult = useCallback((isCorrect: boolean) => {
+    audioService.stopTimer();
     if (isCorrect) {
       setScore(prevScore => prevScore + 1);
       setCumulativeTimeLeft(prev => prev + timeLeftRef.current);
       setShowConfetti(true);
+      audioService.playCorrectSound();
+    } else {
+      audioService.playIncorrectSound();
     }
   }, []);
 
@@ -353,9 +361,13 @@ const App: React.FC = () => {
   useEffect(() => {
     if (gameState === 'playing' && !isAdmin) {
       setTimeLeft(ROUND_DURATION_SECONDS);
+      audioService.resumeAudio();
+      audioService.startTimer(ROUND_DURATION_SECONDS);
       timerIdRef.current = window.setInterval(() => {
         setTimeLeft(prev => {
+          const nextTime = prev - 1;
           if (prev <= 1) {
+            audioService.tickTimer(0);
             if (gameMode === 'year') {
               handleYearGuess(0);
             } else if (gameMode === 'monarch') {
@@ -365,21 +377,27 @@ const App: React.FC = () => {
             }
             return 0;
           }
-          return prev - 1;
+          audioService.tickTimer(nextTime);
+          return nextTime;
         });
       }, 1000);
     } else {
       clearTimer();
+      audioService.stopTimer();
       if (gameState === 'playing') {
         setTimeLeft(ROUND_DURATION_SECONDS);
       }
     }
 
-    return clearTimer;
+    return () => {
+      clearTimer();
+      audioService.stopTimer();
+    };
   }, [gameState, currentRound, isAdmin, gameMode, handleYearGuess, handleMonarchGuess, handleRulerGuess, clearTimer]);
 
   const nextRound = useCallback(() => {
     setShowConfetti(false);
+    audioService.stopTimer();
     if (currentRound + 1 < ROUNDS_PER_GAME) {
       setCurrentRound(prev => prev + 1);
       setLastGuess(null);
@@ -392,8 +410,10 @@ const App: React.FC = () => {
   }, [currentRound]);
 
   const handleStopGame = useCallback(() => {
+    clearTimer();
+    audioService.stopTimer();
     setGameState('start');
-  }, []);
+  }, [clearTimer]);
 
   const handleTypedGuess = (e: React.FormEvent) => {
     e.preventDefault();

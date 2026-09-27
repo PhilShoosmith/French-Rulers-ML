@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ROUND_DURATION_SECONDS } from '../constants';
 import { useTranslation } from 'react-i18next';
+import { Volume2, VolumeX } from 'lucide-react';
+import { audioService } from '../services/audioService';
 
 interface ScoreboardProps {
   score: number;
@@ -14,6 +16,12 @@ interface ScoreboardProps {
 
 const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalRounds, timeLeft, isAdmin }) => {
   const { t } = useTranslation();
+  const [isMuted, setIsMuted] = useState(audioService.isMuted());
+
+  useEffect(() => {
+    return audioService.subscribe((muted) => setIsMuted(muted));
+  }, []);
+
   const isLowTime = timeLeft <= 5;
   const timerColor = isLowTime ? 'text-red-500' : 'text-yellow-300';
   const strokeColor = isLowTime ? 'stroke-red-500' : 'stroke-yellow-300';
@@ -77,8 +85,21 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalR
           
           {renderTimer("text-xl")}
 
-          <div className="text-slate-300 text-right text-lg">
-            {t('round')}: <span className="text-white font-bold text-xl">{round}</span> / {totalRounds}
+          <div className="text-slate-300 text-right text-lg flex items-center justify-end gap-4">
+            <div>
+              {t('round')}: <span className="text-white font-bold text-xl">{round}</span> / {totalRounds}
+            </div>
+            <button
+              onClick={() => {
+                audioService.resumeAudio();
+                audioService.toggleMute();
+              }}
+              className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              title={isMuted ? "Unmute Sound" : "Mute Sound"}
+              aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
+            >
+              {isMuted ? <VolumeX className="w-5 h-5 text-red-400" /> : <Volume2 className="w-5 h-5 text-cyan-400" />}
+            </button>
           </div>
         </div>
 
@@ -99,12 +120,25 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalR
             {renderTimer("text-lg")}
           </div>
 
-          <div className="flex flex-col items-center">
-            <span className="text-slate-400 text-[10px] uppercase tracking-wider">{t('round')}</span>
-            <div className="mt-1 leading-none">
-              <span className="text-white font-bold text-lg">{round}</span>
-              <span className="text-slate-400 text-xs">/{totalRounds}</span>
+          <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center">
+              <span className="text-slate-400 text-[10px] uppercase tracking-wider">{t('round')}</span>
+              <div className="mt-1 leading-none">
+                <span className="text-white font-bold text-lg">{round}</span>
+                <span className="text-slate-400 text-xs">/{totalRounds}</span>
+              </div>
             </div>
+            <button
+              onClick={() => {
+                audioService.resumeAudio();
+                audioService.toggleMute();
+              }}
+              className="p-1.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 focus:outline-none"
+              title={isMuted ? "Unmute Sound" : "Mute Sound"}
+              aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
+            >
+              {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+            </button>
           </div>
         </div>
       </div>
