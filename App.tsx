@@ -137,6 +137,19 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <h3 className="font-bold text-lg text-yellow-400 mb-2">{t('learnMore')}</h3>
             <p>{t('learnMoreDesc')}</p>
           </div>
+          <div className="pt-2">
+            <h3 className="font-bold text-lg text-yellow-400 mb-3">{t('videoTutorial')}</h3>
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700/80 shadow-xl bg-slate-900">
+              <iframe
+                className="w-full h-full absolute inset-0"
+                src="https://www.youtube-nocookie.com/embed/M3X2tiEUah4"
+                title="How to Play - Rulers of France Timeline"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </div>
         </div>
          <footer className="p-4 flex justify-end border-t border-slate-700">
             <button
