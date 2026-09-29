@@ -11,6 +11,14 @@ class AudioService {
   private listeners: Set<(muted: boolean) => void> = new Set();
   private timerActive: boolean = false;
   private pendingTimeouts: number[] = [];
+  
+  // Background music management (Handel: Sarabande HWV 437 Harpsichord)
+  private bgAudio: HTMLAudioElement | null = null;
+  private bgMusicWanted: boolean = false;
+  private isBgMusicPlaying: boolean = false;
+  private bgVolume: number = 0.32;
+  private unlockListenerAttached: boolean = false;
+  private bgMusicListeners: Set<(isPlaying: boolean) => void> = new Set();
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -21,6 +29,111 @@ class AudioService {
         }
       } catch (_) {}
     }
+  }
+
+  private initBgAudio(): HTMLAudioElement | null {
+    if (typeof window === 'undefined') return null;
+    if (!this.bgAudio) {
+      this.bgAudio = new Audio('/audio/handel-sarabande-hwv-437.mp3');
+      this.bgAudio.loop = true;
+      this.bgAudio.volume = this.muted ? 0 : this.bgVolume;
+      this.bgAudio.preload = 'auto';
+
+      this.bgAudio.addEventListener('play', () => {
+        this.isBgMusicPlaying = true;
+        this.notifyBgMusicListeners();
+      });
+      this.bgAudio.addEventListener('pause', () => {
+        this.isBgMusicPlaying = false;
+        this.notifyBgMusicListeners();
+      });
+      this.bgAudio.addEventListener('ended', () => {
+        this.isBgMusicPlaying = false;
+        this.notifyBgMusicListeners();
+      });
+    }
+    return this.bgAudio;
+  }
+
+  private notifyBgMusicListeners() {
+    this.bgMusicListeners.forEach(fn => fn(this.isBgMusicPlaying));
+  }
+
+  private setupAutoplayUnlock() {
+    if (this.unlockListenerAttached || typeof window === 'undefined') return;
+    this.unlockListenerAttached = true;
+    const unlock = () => {
+      if (this.bgMusicWanted && !this.muted) {
+        const audio = this.initBgAudio();
+        if (audio && audio.paused) {
+          audio.volume = this.bgVolume;
+          audio.play().catch(() => {});
+        }
+      }
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('keydown', unlock);
+      this.unlockListenerAttached = false;
+    };
+    window.addEventListener('click', unlock, { once: true, passive: true });
+    window.addEventListener('touchstart', unlock, { once: true, passive: true });
+    window.addEventListener('keydown', unlock, { once: true, passive: true });
+  }
+
+  public playBackgroundMusic() {
+    this.bgMusicWanted = true;
+    if (this.muted) return;
+    const audio = this.initBgAudio();
+    if (!audio) return;
+    audio.volume = this.bgVolume;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay prevented by browser until user gesture
+        this.setupAutoplayUnlock();
+      });
+    }
+  }
+
+  public pauseBackgroundMusic() {
+    this.bgMusicWanted = false;
+    if (this.bgAudio && !this.bgAudio.paused) {
+      this.bgAudio.pause();
+    }
+  }
+
+  public toggleBackgroundMusic(): boolean {
+    if (this.isBgMusicPlaying) {
+      this.pauseBackgroundMusic();
+      return false;
+    } else {
+      if (this.muted) {
+        this.setMuted(false);
+      }
+      this.playBackgroundMusic();
+      return true;
+    }
+  }
+
+  public isBackgroundPlaying(): boolean {
+    return this.isBgMusicPlaying;
+  }
+
+  public setBackgroundMusicVolume(volume: number) {
+    this.bgVolume = Math.max(0, Math.min(1, volume));
+    if (this.bgAudio && !this.muted) {
+      this.bgAudio.volume = this.bgVolume;
+    }
+  }
+
+  public getBackgroundMusicVolume(): number {
+    return this.bgVolume;
+  }
+
+  public subscribeBgMusic(fn: (isPlaying: boolean) => void): () => void {
+    this.bgMusicListeners.add(fn);
+    fn(this.isBgMusicPlaying);
+    return () => this.bgMusicListeners.delete(fn);
   }
 
   private getContext(): AudioContext | null {
@@ -52,6 +165,14 @@ class AudioService {
     } catch (_) {}
     if (muted) {
       this.stopTimer();
+      if (this.bgAudio && !this.bgAudio.paused) {
+        this.bgAudio.pause();
+      }
+    } else {
+      if (this.bgMusicWanted && this.bgAudio) {
+        this.bgAudio.volume = this.bgVolume;
+        this.bgAudio.play().catch(() => this.setupAutoplayUnlock());
+      }
     }
     this.listeners.forEach(fn => fn(this.muted));
   }

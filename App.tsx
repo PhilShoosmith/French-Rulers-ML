@@ -233,6 +233,30 @@ const App: React.FC = () => {
     return () => clearTimeout(preloadTimeout);
   }, []);
 
+  // Play Handel Sarabande background music automatically when on opening screen ('start')
+  useEffect(() => {
+    if (gameState === 'start') {
+      audioService.playBackgroundMusic();
+    } else {
+      audioService.pauseBackgroundMusic();
+    }
+  }, [gameState]);
+
+  // Handle document visibility change (pause music when tab is hidden, resume when tab is active on start screen)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        audioService.pauseBackgroundMusic();
+      } else if (gameState === 'start') {
+        audioService.playBackgroundMusic();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [gameState]);
+
   const [stagedPortraitChanges, setStagedPortraitChanges] = useState<Record<number, string>>({});
   const [saveMessage, setSaveMessage] = useState<string>('');
   const [uploadMessage, setUploadMessage] = useState<string>('');

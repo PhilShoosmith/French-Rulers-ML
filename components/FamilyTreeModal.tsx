@@ -27,6 +27,15 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
   const [activeView, setActiveView] = useState<'overview' | 'monarch'>('overview');
   const [selectedMonarch, setSelectedMonarch] = useState<Monarch>(royalMonarchs[0] || monarchs[0]);
 
+  // Zoom and Drag State for Overview
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const initialPinchDistance = useRef<number | null>(null);
+  const initialScale = useRef<number>(1);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Handle opening and initial monarch
   useEffect(() => {
     if (isOpen) {
@@ -81,14 +90,6 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
     return m.context;
   };
 
-  // Zoom and Drag State for Overview
-  const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStart = useRef({ x: 0, y: 0 });
-  const initialPinchDistance = useRef<number | null>(null);
-  const initialScale = useRef<number>(1);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleWheel = (e: React.WheelEvent) => {
     const zoomSensitivity = 0.001;

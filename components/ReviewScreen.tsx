@@ -70,7 +70,7 @@ const ReviewScreen: React.FC<{
     monarchs: Monarch[]; 
     onBack: () => void; 
     onLearnMore: (monarch: Monarch) => void; 
-    onOpenFamilyTree?: (monarch: Monarch) => void;
+    onOpenFamilyTree?: (monarch?: Monarch) => void;
 }> = ({ monarchs, onBack, onLearnMore, onOpenFamilyTree }) => {
     const { t, i18n } = useTranslation();
     const [isPaused, setIsPaused] = useState(false);

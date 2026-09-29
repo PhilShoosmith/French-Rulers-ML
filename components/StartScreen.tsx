@@ -2,7 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Monarch, GameMode } from '../types';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Music } from 'lucide-react';
+import { audioService } from '../services/audioService';
 
 interface StartScreenProps {
   onStart: (mode: GameMode) => void;
@@ -19,6 +20,37 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
   const { t, i18n } = useTranslation();
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
+
+  // Background Music state (Handel: Sarabande)
+  const [isMusicPlaying, setIsMusicPlaying] = useState<boolean>(() => audioService.isBackgroundPlaying());
+  const [isMuted, setIsMuted] = useState<boolean>(() => audioService.isMuted());
+
+  useEffect(() => {
+    const unsubBg = audioService.subscribeBgMusic((playing) => {
+      setIsMusicPlaying(playing);
+    });
+    const unsubMute = audioService.subscribe((muted) => {
+      setIsMuted(muted);
+    });
+    return () => {
+      unsubBg();
+      unsubMute();
+    };
+  }, []);
+
+  const isSoundOn = isMusicPlaying && !isMuted;
+
+  const handleToggleSound = () => {
+    audioService.resumeAudio();
+    if (isSoundOn) {
+      audioService.pauseBackgroundMusic();
+    } else {
+      if (isMuted) {
+        audioService.setMuted(false);
+      }
+      audioService.playBackgroundMusic();
+    }
+  };
 
   const [dailyFactMonarch, setDailyFactMonarch] = useState<Monarch | null>(() => {
     if (!monarchs || monarchs.length === 0) return null;
@@ -98,6 +130,24 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
         </div>
       </div>
       
+      {/* Background Music Pill (Handel: Sarabande) */}
+      <div className="absolute top-4 left-4 z-50">
+        <button
+          type="button"
+          onClick={handleToggleSound}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border bg-slate-900/85 border-slate-700/80 hover:border-amber-500/50 backdrop-blur-md text-white shadow-xl transition-all duration-200 cursor-pointer focus:outline-none group"
+          title="Handel: Sarabande"
+          aria-label="Handel: Sarabande"
+        >
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${isSoundOn ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'}`}>
+            <Music size={13} className={isSoundOn ? 'animate-pulse' : 'opacity-60'} />
+          </div>
+          <span className="text-xs font-semibold text-slate-200 group-hover:text-amber-300 tracking-wide whitespace-nowrap">
+            Handel: Sarabande
+          </span>
+        </button>
+      </div>
+
       {/* Language Selector */}
       <div className="absolute top-4 right-4 z-50" ref={langMenuRef}>
         <button 
