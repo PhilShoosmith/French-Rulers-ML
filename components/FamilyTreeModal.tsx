@@ -157,13 +157,45 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Group by house in chronological order of their first appearance
-  const houses = ['Capet', 'Valois', 'Bourbon', 'Bonaparte', 'Orléans'];
-
-  const monarchsByHouse = houses.reduce((acc, house) => {
-    acc[house] = royalMonarchs.filter(m => m.house === house);
-    return acc;
-  }, {} as Record<string, Monarch[]>);
+  // Group by house and include French Presidents to the right of House of Orléans
+  const branches = [
+    {
+      id: 'Capet',
+      title: t('houseOf', { house: 'Capet' }),
+      isRepublic: false,
+      leaders: royalMonarchs.filter(m => m.house === 'Capet'),
+    },
+    {
+      id: 'Valois',
+      title: t('houseOf', { house: 'Valois' }),
+      isRepublic: false,
+      leaders: royalMonarchs.filter(m => m.house === 'Valois'),
+    },
+    {
+      id: 'Bourbon',
+      title: t('houseOf', { house: 'Bourbon' }),
+      isRepublic: false,
+      leaders: royalMonarchs.filter(m => m.house === 'Bourbon'),
+    },
+    {
+      id: 'Bonaparte',
+      title: t('houseOf', { house: 'Bonaparte' }),
+      isRepublic: false,
+      leaders: royalMonarchs.filter(m => m.house === 'Bonaparte'),
+    },
+    {
+      id: 'Orléans',
+      title: t('houseOf', { house: 'Orléans' }),
+      isRepublic: false,
+      leaders: royalMonarchs.filter(m => m.house === 'Orléans'),
+    },
+    {
+      id: 'Republic',
+      title: t('frenchPresidents') || 'French Presidents',
+      isRepublic: true,
+      leaders: presidentMonarchs.slice().sort((a, b) => a.reignStart - b.reignStart),
+    },
+  ];
 
   return (
     <div
@@ -211,8 +243,8 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <span>👨‍👩‍👧‍👦</span>
-                <span>{t('monarchFamilyTree')}</span>
+                <span>{selectedMonarch.house === 'Republic' ? '🏛️' : '👨‍👩‍👧‍👦'}</span>
+                <span>{selectedMonarch.house === 'Republic' ? (t('presidentialCareer') || 'President Career') : t('monarchFamilyTree')}</span>
               </button>
             </div>
           </div>
@@ -287,47 +319,62 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
                   <div className="w-1 h-12 bg-gradient-to-b from-amber-500 to-amber-600/50"></div>
                 </div>
 
-                {/* Houses Branching */}
+                {/* Branches: Royal Houses and French Presidents */}
                 <div className="flex items-start justify-center relative w-full">
-                  {houses.map((house, index) => {
+                  {branches.map((branch, index) => {
                     const isFirst = index === 0;
-                    const isLast = index === houses.length - 1;
+                    const isLast = index === branches.length - 1;
                     const isMiddle = !isFirst && !isLast;
-                    const houseMonarchs = monarchsByHouse[house];
+                    const branchLeaders = branch.leaders;
 
-                    if (!houseMonarchs || houseMonarchs.length === 0) return null;
+                    if (!branchLeaders || branchLeaders.length === 0) return null;
 
                     return (
-                      <div key={house} className="flex flex-col items-center relative px-4 sm:px-8 flex-1">
+                      <div key={branch.id} className="flex flex-col items-center relative px-4 sm:px-8 flex-1">
                         {/* Horizontal Line */}
                         {isFirst && !isLast && <div className="absolute top-0 right-0 w-1/2 h-1 bg-amber-600/50"></div>}
                         {isLast && !isFirst && <div className="absolute top-0 left-0 w-1/2 h-1 bg-amber-600/50"></div>}
                         {isMiddle && <div className="absolute top-0 left-0 w-full h-1 bg-amber-600/50"></div>}
 
-                        {/* Vertical Line down to House Node */}
+                        {/* Vertical Line down to House / Presidents Node */}
                         <div className="w-1 h-8 bg-amber-600/50"></div>
 
-                        {/* House Node */}
-                        <div className="bg-slate-800 border-2 border-amber-600/80 px-8 py-3 rounded-xl z-10 shadow-[0_0_15px_rgba(217,119,6,0.3)] mb-2 relative pointer-events-auto">
-                          <h3 className="text-lg font-bold text-amber-500 tracking-widest uppercase whitespace-nowrap">
-                            {t('houseOf', { house })}
+                        {/* House / Presidents Node */}
+                        <div className={`px-6 sm:px-8 py-3 rounded-xl z-10 mb-2 relative pointer-events-auto border-2 ${
+                          branch.isRepublic
+                            ? 'bg-slate-800 border-blue-500/80 shadow-[0_0_15px_rgba(59,130,246,0.35)]'
+                            : 'bg-slate-800 border-amber-600/80 shadow-[0_0_15px_rgba(217,119,6,0.3)]'
+                        }`}>
+                          <h3 className={`text-base sm:text-lg font-bold tracking-widest uppercase whitespace-nowrap flex items-center justify-center gap-1.5 ${
+                            branch.isRepublic ? 'text-blue-400' : 'text-amber-500'
+                          }`}>
+                            {branch.isRepublic && <span>🏛️</span>}
+                            <span>{branch.title}</span>
                           </h3>
                         </div>
 
-                        {/* Monarchs */}
+                        {/* Leaders list (Monarchs or Subsequent Presidents) */}
                         <div className="flex flex-col items-center w-full">
-                          {houseMonarchs.map(monarch => (
+                          {branchLeaders.map(monarch => (
                             <div
                               key={monarch.id}
                               className="flex flex-col items-center relative group w-48 cursor-pointer"
                               onClick={() => handleSelectMonarch(monarch)}
                             >
                               {/* Vertical line from previous node */}
-                              <div className="w-1 h-12 bg-slate-700 group-hover:bg-amber-500/80 transition-colors duration-300"></div>
+                              <div className={`w-1 h-12 transition-colors duration-300 ${
+                                branch.isRepublic
+                                  ? 'bg-slate-700 group-hover:bg-blue-400/80'
+                                  : 'bg-slate-700 group-hover:bg-amber-500/80'
+                              }`}></div>
 
-                              {/* Monarch Node */}
+                              {/* Monarch / President Avatar Node */}
                               <div
-                                className="relative w-28 h-28 rounded-full border-4 border-slate-700 overflow-hidden bg-slate-800 transition-all duration-300 group-hover:border-amber-400 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(251,191,36,0.6)] z-10 pointer-events-auto"
+                                className={`relative w-28 h-28 rounded-full border-4 border-slate-700 overflow-hidden bg-slate-800 transition-all duration-300 z-10 pointer-events-auto ${
+                                  branch.isRepublic
+                                    ? 'group-hover:border-blue-400 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(96,165,250,0.6)]'
+                                    : 'group-hover:border-amber-400 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(251,191,36,0.6)]'
+                                }`}
                                 onMouseEnter={() => setHoveredMonarch(monarch)}
                                 onMouseLeave={() => setHoveredMonarch(null)}
                               >
@@ -345,27 +392,41 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
                                   </div>
                                 )}
 
-                                {/* Little Crown overlay badge */}
-                                <div className="absolute bottom-1 right-1 bg-amber-500 text-slate-950 p-1 rounded-full text-[10px] leading-none shadow group-hover:scale-125 transition-transform">
-                                  👑
+                                {/* Overlay badge */}
+                                <div className={`absolute bottom-1 right-1 p-1 rounded-full text-[10px] leading-none shadow group-hover:scale-125 transition-transform ${
+                                  branch.isRepublic
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-amber-500 text-slate-950'
+                                }`}>
+                                  {branch.isRepublic ? '🏛️' : '👑'}
                                 </div>
                               </div>
 
                               <div className="mt-3 text-center mb-2 pointer-events-auto">
-                                <p className="font-bold text-base text-slate-200 group-hover:text-amber-400 transition-colors flex items-center justify-center gap-1">
+                                <p className={`font-bold text-base text-slate-200 transition-colors flex items-center justify-center gap-1 ${
+                                  branch.isRepublic
+                                    ? 'group-hover:text-blue-400'
+                                    : 'group-hover:text-amber-400'
+                                }`}>
                                   {getMonarchName(monarch)}
                                 </p>
                                 <p className="text-xs text-slate-400 font-mono mt-1 bg-slate-800/80 px-2 py-0.5 rounded-md inline-block border border-slate-700/50">
                                   {monarch.reignStart} - {monarch.reignEnd || t('present')}
                                 </p>
-                                <p className="text-[11px] text-amber-400/70 font-semibold mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  {t('tapToViewFamily')} →
+                                <p className={`text-[11px] font-semibold mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+                                  branch.isRepublic ? 'text-blue-400/80' : 'text-amber-400/70'
+                                }`}>
+                                  {branch.isRepublic ? (t('tapToViewCareer') || 'View Career Path') : t('tapToViewFamily')} →
                                 </p>
                               </div>
 
-                              {/* Hover Tooltip (Local to Monarch) */}
+                              {/* Hover Tooltip (Local to Monarch / President) */}
                               {hoveredMonarch?.id === monarch.id && (
-                                <div className="absolute top-1/2 left-full ml-4 -translate-y-1/2 bg-slate-800/95 backdrop-blur-md border border-amber-500/60 rounded-xl p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)] w-72 z-50 pointer-events-none animate-fade-in">
+                                <div className={`absolute top-1/2 ${
+                                  isLast ? 'right-full mr-4' : 'left-full ml-4'
+                                } -translate-y-1/2 bg-slate-800/95 backdrop-blur-md rounded-xl p-4 shadow-[0_10px_40px_rgba(0,0,0,0.6)] w-72 z-50 pointer-events-none animate-fade-in border ${
+                                  monarch.house === 'Republic' ? 'border-blue-500/60' : 'border-amber-500/60'
+                                }`}>
                                   <div className="flex flex-col gap-3">
                                     <div className="flex items-start gap-3">
                                       {hoveredMonarch.imageUrl && (
@@ -377,10 +438,12 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
                                         />
                                       )}
                                       <div>
-                                        <h4 className="font-bold text-amber-400 text-sm leading-tight">
+                                        <h4 className={`font-bold text-sm leading-tight ${
+                                          hoveredMonarch.house === 'Republic' ? 'text-blue-400' : 'text-amber-400'
+                                        }`}>
                                           {getMonarchName(hoveredMonarch)}
                                         </h4>
-                                        <p className="text-amber-600/80 text-[10px] uppercase tracking-wider font-bold mt-0.5">
+                                        <p className="text-slate-400 text-[10px] uppercase tracking-wider font-bold mt-0.5">
                                           {getMonarchTitle(hoveredMonarch)}
                                         </p>
                                       </div>
@@ -388,8 +451,11 @@ const FamilyTreeModal: React.FC<FamilyTreeModalProps> = ({
                                     <p className="text-slate-300 text-xs leading-relaxed">
                                       {getMonarchContext(hoveredMonarch)}
                                     </p>
-                                    <div className="pt-2 border-t border-slate-700 text-amber-400 text-[11px] font-semibold flex items-center gap-1">
-                                      <span>👑 {t('tapToViewFamily')}</span>
+                                    <div className={`pt-2 border-t border-slate-700 text-[11px] font-semibold flex items-center gap-1 ${
+                                      hoveredMonarch.house === 'Republic' ? 'text-blue-400' : 'text-amber-400'
+                                    }`}>
+                                      <span>{hoveredMonarch.house === 'Republic' ? '🏛️' : '👑'}</span>
+                                      <span>{hoveredMonarch.house === 'Republic' ? (t('tapToViewCareer') || 'Tap to view career') : t('tapToViewFamily')}</span>
                                     </div>
                                   </div>
                                 </div>
