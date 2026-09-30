@@ -207,7 +207,7 @@ export const PresidentCareerView: React.FC<PresidentCareerViewProps> = ({
             {/* Final Presidency Stage */}
             <div className="relative pl-8 sm:pl-10">
                 <div className="absolute -left-[17px] top-0.5 w-8 h-8 rounded-full bg-blue-600 border-2 border-blue-400 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.6)] z-10 text-sm">
-                  👑
+                  🏛️
                 </div>
                 <div className="bg-gradient-to-r from-blue-900/40 to-slate-850 border border-blue-500/50 rounded-xl p-4 sm:p-5 shadow-lg">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
