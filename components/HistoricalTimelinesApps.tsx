@@ -13,29 +13,29 @@ const apps: TimelineApp[] = [
     id: 'uk-monarchs',
     title: 'UK Monarchs',
     badgeUrl: '/images/uk_monarchs_badge.jpg',
-    appleUrl: 'https://apps.apple.com/app/uk-monarchs-timeline/id6739958988',
-    googleUrl: 'https://play.google.com/store/apps/details?id=com.pmpshoosmith.monarchstimeline',
+    appleUrl: 'https://apps.apple.com/app/uk-monarchs-timeline/id6760196085',
+    googleUrl: 'https://play.google.com/store/apps/details?id=app.ukmonarchtimeline',
   },
   {
     id: 'uk-pms',
     title: 'UK PMs',
     badgeUrl: '/images/uk_pms_badge.jpg',
-    appleUrl: 'https://apps.apple.com/search?term=UK+Prime+Ministers+Timeline',
-    googleUrl: 'https://play.google.com/store/search?q=UK%20Prime%20Ministers%20Timeline&c=apps',
+    appleUrl: 'https://apps.apple.com/app/uk-prime-ministers-timeline/id6761317024',
+    googleUrl: 'https://play.google.com/store/apps/details?id=app.ukpms',
   },
   {
     id: 'french-rulers',
     title: 'French Rulers',
     badgeUrl: '/images/french_rulers_badge.jpg',
-    appleUrl: 'https://apps.apple.com/app/french-rulers-timeline/id6740884976',
-    googleUrl: 'https://play.google.com/store/search?q=French%20Rulers%20Timeline&c=apps',
+    appleUrl: 'https://apps.apple.com/app/french-rulers-timeline/id6761076227',
+    googleUrl: 'https://play.google.com/store/apps/details?id=app.frrulers',
   },
   {
     id: 'us-presidents',
     title: 'US Presidents',
     badgeUrl: '/images/us_presidents_badge.jpg',
-    appleUrl: 'https://apps.apple.com/app/us-presidents-timeline/id6740683058',
-    googleUrl: 'https://play.google.com/store/search?q=US%20Presidents%20Timeline&c=apps',
+    appleUrl: 'https://apps.apple.com/app/us-presidents-timeline/id6761148914',
+    googleUrl: 'https://play.google.com/store/apps/details?id=app.uspresidents',
   },
 ];
 
@@ -43,11 +43,6 @@ const apps: TimelineApp[] = [
 const AppStoreIcon: React.FC<{ className?: string }> = ({ className = 'w-7 h-7' }) => (
   <svg viewBox="0 0 512 512" className={className} fill="none">
     <rect width="512" height="512" rx="115" fill="#1C69D4" />
-    <path
-      d="M336.8 384l-25.2-43.7H200.4l-25.2 43.7h-58.4l112.5-194.8 25.2 43.7-54.1 93.7h97.4l-54.1-93.7 25.2-43.7 112.5 194.8h-44.4z"
-      fill="#fff"
-      display="none"
-    />
     <g transform="translate(64, 64) scale(0.75)" stroke="#fff" strokeWidth="36" strokeLinecap="round" strokeLinejoin="round">
       <line x1="256" y1="56" x2="150" y2="440" />
       <line x1="100" y1="360" x2="412" y2="360" />
@@ -77,20 +72,22 @@ export const HistoricalTimelinesApps: React.FC = () => {
         <div className="flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-slate-700">
           <span>Download from</span>
           <a
-            href="https://apps.apple.com/developer/philippe-shoosmith/id1788879612"
+            href="https://apps.apple.com/developer/philippe-shoosmith/id1850530456"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[#0284c7] hover:underline hover:opacity-85 transition-opacity"
+            title="Philippe Shoosmith on Apple App Store"
           >
             <span>Apple Store</span>
             <AppStoreIcon className="w-4 h-4 inline-block drop-shadow-sm" />
           </a>
           <span>or</span>
           <a
-            href="https://play.google.com/store/search?q=Historical%20Timelines&c=apps"
+            href="https://play.google.com/store/apps/developer?id=Philippe+Shoosmith"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[#0284c7] hover:underline hover:opacity-85 transition-opacity"
+            title="Philippe Shoosmith on Google Play Store"
           >
             <span>Google Store</span>
             <GooglePlayIcon className="w-4 h-4 inline-block drop-shadow-sm" />
@@ -109,7 +106,6 @@ export const HistoricalTimelinesApps: React.FC = () => {
                 alt={app.title}
                 className="w-full h-full object-cover rounded-full"
                 onError={(e) => {
-                  // Fallback to stylized SVG placeholder if local image isn't loaded
                   const target = e.currentTarget;
                   target.style.display = 'none';
                   const parent = target.parentElement;
