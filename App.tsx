@@ -19,6 +19,7 @@ import PrivacyPolicyModal from './components/PrivacyPolicyModal';
 import TermsOfServiceModal from './components/TermsOfServiceModal';
 import HallOfFameModal from './components/HallOfFameModal';
 import FamilyTreeModal from './components/FamilyTreeModal';
+import HistoricalTimelinesApps from './components/HistoricalTimelinesApps';
 import { audioService } from './services/audioService';
 
 interface GroundingSource {
@@ -92,7 +93,7 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       aria-labelledby="instructions-modal-title"
     >
       <div
-        className="bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col animate-scale-in"
+        className="bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col animate-scale-in"
         onClick={e => e.stopPropagation()}
       >
         <header className="p-4 border-b border-slate-700 flex justify-between items-center flex-shrink-0">
@@ -142,13 +143,16 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700/80 shadow-xl bg-slate-900">
               <iframe
                 className="w-full h-full absolute inset-0"
-                src="https://www.youtube-nocookie.com/embed/M3X2tiEUah4"
+                src="https://www.youtube-nocookie.com/embed/JSyHaUZmMl0"
                 title="How to Play - Rulers of France Timeline"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
               />
             </div>
+          </div>
+          <div className="pt-2">
+            <HistoricalTimelinesApps />
           </div>
         </div>
          <footer className="p-4 flex justify-end border-t border-slate-700">
