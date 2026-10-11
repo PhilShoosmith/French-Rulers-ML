@@ -709,8 +709,9 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
         if (!currentMonarch) return null;
         const totalAnswered = gameState === 'feedback' ? currentRound + 1 : currentRound;
         const incorrectAnswers = Math.max(0, totalAnswered - score);
+        const isYearMode = gameMode === 'year';
         return (
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between min-h-[100dvh] pt-16 sm:pt-24 pb-2 sm:pb-4">
+          <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between min-h-[100dvh] ${isYearMode ? 'pt-12 sm:pt-16 pb-1 sm:pb-2' : 'pt-16 sm:pt-24 pb-2 sm:pb-4'}`}>
             {isAdmin && (
               <div className="fixed top-24 right-4 bg-purple-900/80 p-2 rounded border border-purple-600 z-50 shadow-lg flex flex-col items-center gap-2 w-48">
                 <p className="font-mono text-sm text-yellow-300">Admin: {currentMonarch.reignStart}</p>
@@ -774,8 +775,8 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
             )}
             <Scoreboard score={score} incorrect={incorrectAnswers} round={currentRound + 1} totalRounds={ROUNDS_PER_GAME} timeLeft={timeLeft} isAdmin={isAdmin} />
             
-            <div className="w-full flex-1 flex flex-col lg:flex-row items-center justify-center lg:items-center lg:gap-8 mt-2 lg:mt-4">
-              <div className="w-36 sm:w-56 lg:w-full max-w-sm mx-auto lg:mx-0 flex-shrink-0">
+            <div className={`w-full flex-1 flex flex-col lg:flex-row items-center justify-center lg:items-center ${isYearMode ? 'gap-3 lg:gap-6 mt-1 lg:mt-2' : 'lg:gap-8 mt-2 lg:mt-4'}`}>
+              <div className={`${isYearMode ? 'w-32 sm:w-44 lg:max-w-[240px]' : 'w-36 sm:w-56 lg:w-full max-w-sm'} mx-auto lg:mx-0 flex-shrink-0`}>
                 {(gameMode !== 'ruler' || gameState === 'feedback') && (
                   <MonarchCard
                     monarch={currentMonarch}
@@ -783,11 +784,12 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
                     isAdmin={isAdmin}
                     onPortraitUpload={handlePortraitUpload}
                     stagedPortraitUrl={stagedPortraitChanges[currentMonarch?.id]}
+                    compact={isYearMode}
                   />
                 )}
               </div>
 
-              <div className="w-full lg:max-w-md mt-8 lg:mt-0">
+              <div className={`w-full ${isYearMode ? 'lg:max-w-md mt-3 lg:mt-0' : 'lg:max-w-md mt-8 lg:mt-0'}`}>
                 {gameState === 'feedback' && lastGuess ? (
                   <Feedback 
                     lastGuess={lastGuess} 
@@ -801,11 +803,11 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
                 ) : (
                    <>
                     {gameMode === 'year' && (
-                       <div className="p-6 bg-slate-800/50 rounded-2xl border border-slate-700/50 animate-fade-in-up">
-                        <p className="text-lg md:text-xl text-slate-300 font-light mb-4 text-center">{t('placeOnTimeline', { name: getMonarchName(currentMonarch) })}</p>
-                        <form onSubmit={handleTypedGuess} className="flex flex-col sm:flex-row items-center gap-4 w-full">
-                            <input type="number" value={typedYear} onChange={(e) => setTypedYear(e.target.value)} disabled={gameState === 'feedback'} placeholder={t('enterYear')} className="bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-2 text-white text-lg w-full sm:flex-grow text-center focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50" aria-label="Enter reign start year" />
-                            <button type="submit" disabled={gameState === 'feedback' || !typedYear.trim()} className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 focus:outline-none focus:ring-4 focus:ring-blue-500/50">{t('submit')}</button>
+                       <div className="p-3.5 sm:p-5 bg-slate-800/50 rounded-xl border border-slate-700/50 animate-fade-in-up">
+                        <p className="text-sm sm:text-base md:text-lg text-slate-300 font-medium mb-3 text-center">{t('placeOnTimeline', { name: getMonarchName(currentMonarch) })}</p>
+                        <form onSubmit={handleTypedGuess} className="flex flex-col sm:flex-row items-center gap-3 w-full">
+                            <input type="number" value={typedYear} onChange={(e) => setTypedYear(e.target.value)} disabled={gameState === 'feedback'} placeholder={t('enterYear')} className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-base sm:text-lg w-full sm:flex-grow text-center focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50" aria-label="Enter reign start year" />
+                            <button type="submit" disabled={gameState === 'feedback' || !typedYear.trim()} className="w-full sm:w-auto px-5 py-1.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 focus:outline-none focus:ring-4 focus:ring-blue-500/50 text-sm sm:text-base">{t('submit')}</button>
                         </form>
                        </div>
                     )}
@@ -829,7 +831,7 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
             </div>
             
             {gameMode === 'year' && (
-              <div className="w-full mt-1 sm:mt-4 flex-shrink-0">
+              <div className="w-full mt-1 sm:mt-2 flex-shrink-0">
                  <Timeline 
                     onGuess={handleYearGuess} 
                     disabled={gameState === 'feedback' || isAdmin} 

@@ -28,14 +28,16 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearn
     return m.name;
   };
 
+  const isYearMode = lastGuess.type === 'year';
+
   const renderFeedbackContent = () => {
     if (lastGuess.type === 'year') {
       const { isCorrect, correctYear, guessedYear, timedOut } = lastGuess;
       if (timedOut) {
         return (
           <div>
-            <h3 className="text-3xl font-bold text-red-400 mb-2">{t('timesUp')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-2xl sm:text-3xl font-bold text-red-400 mb-1.5">{t('timesUp')}</h3>
+            <p className="text-sm sm:text-base text-slate-300">
               {t('correctYearWas')} <span className="font-bold text-white">{correctYear}</span>.
             </p>
           </div>
@@ -44,8 +46,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearn
       if (isCorrect) {
         return (
           <div>
-            <h3 className="text-3xl font-bold text-green-400 mb-2">{t('correctExclaim')}</h3>
-            <p className="text-slate-300">
+            <h3 className="text-2xl sm:text-3xl font-bold text-green-400 mb-1.5">{t('correctExclaim')}</h3>
+            <p className="text-sm sm:text-base text-slate-300">
               {t('correctYearFeedback', { year: correctYear })}
             </p>
           </div>
@@ -53,8 +55,8 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearn
       }
       return (
         <div>
-          <h3 className="text-3xl font-bold text-red-400 mb-2">{t('notQuite')}</h3>
-          <p className="text-slate-300">
+          <h3 className="text-2xl sm:text-3xl font-bold text-red-400 mb-1.5">{t('notQuite')}</h3>
+          <p className="text-sm sm:text-base text-slate-300">
             {t('youGuessed')} {guessedYear}, {t('butCorrectYearWas')} <span className="font-bold text-white">{correctYear}</span>.
           </p>
         </div>
@@ -137,25 +139,25 @@ const Feedback: React.FC<FeedbackProps> = ({ lastGuess, onNext, monarch, onLearn
   const displayContext = i18n.language === 'fr' && monarch.contextFr ? monarch.contextFr : i18n.language === 'ja' && monarch.contextJa ? monarch.contextJa : i18n.language === 'zh' && monarch.contextZh ? monarch.contextZh : i18n.language === 'es' && monarch.contextEs ? monarch.contextEs : i18n.language === 'hi' && monarch.contextHi ? monarch.contextHi : i18n.language === 'ar' && monarch.contextAr ? monarch.contextAr : monarch.context;
 
   return (
-    <div className="w-full mx-auto p-6 bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-700 text-center animate-fade-in-up">
+    <div className={`w-full mx-auto ${isYearMode ? 'p-3.5 sm:p-5' : 'p-6'} bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-700 text-center animate-fade-in-up`}>
       {renderFeedbackContent()}
 
-      <div className="mt-4 p-3 bg-slate-900/50 border border-slate-700 rounded-lg text-left">
-        <p className="text-sm text-slate-300 leading-relaxed">
+      <div className={`${isYearMode ? 'mt-2.5 p-2.5' : 'mt-4 p-3'} bg-slate-900/50 border border-slate-700 rounded-lg text-left`}>
+        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
           <span className="font-bold text-amber-400">{t('didYouKnow')}</span> {displayContext}
         </p>
       </div>
 
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap">
+      <div className={`${isYearMode ? 'mt-3.5 sm:mt-4 gap-2.5 sm:gap-3' : 'mt-6 gap-4'} flex flex-col sm:flex-row items-center justify-center flex-wrap`}>
         <button
           onClick={onNext}
-          className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+          className="w-full sm:w-auto px-5 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 text-sm sm:text-base"
         >
           {t('nextRound')}
         </button>
         <button
           onClick={() => onLearnMore(monarch)}
-          className="w-full sm:w-auto px-6 py-2 bg-green-400 text-black font-bold rounded-lg hover:bg-green-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-green-500/50 flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-5 py-2 bg-green-400 text-black font-bold rounded-lg hover:bg-green-500 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-green-500/50 flex items-center justify-center gap-2 text-sm sm:text-base"
           aria-label={`Learn more about ${getMonarchName(monarch)}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

@@ -135,9 +135,9 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
   }
 
   return (
-    <div className="w-full py-4 px-2 sm:px-4 relative">
+    <div className="w-full py-2 sm:py-3 px-2 sm:px-4 relative">
        {/* Historical Periods Background */}
-      <div className="relative mb-3 w-full h-10 flex items-center rounded-lg overflow-hidden border border-slate-700">
+      <div className="relative mb-2 sm:mb-2.5 w-full h-8 sm:h-9 flex items-center rounded-lg overflow-hidden border border-slate-700">
         {HISTORICAL_PERIODS.map(period => (
             <div 
                 key={period.name}
