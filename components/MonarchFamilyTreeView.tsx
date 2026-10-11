@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Monarch } from '../types';
 import { useTranslation } from 'react-i18next';
 import { getMonarchGenealogy } from '../services/genealogyData';
+import { TenureHighlightsSection } from './TenureHighlightsSection';
 
 interface MonarchFamilyTreeViewProps {
   selectedMonarch: Monarch;
@@ -384,6 +385,9 @@ export const MonarchFamilyTreeView: React.FC<MonarchFamilyTreeViewProps> = ({
             </div>
           </div>
         )}
+
+        {/* SECTION 5: TENURE HIGHLIGHTS & CONTEMPORARY WORLD LEADERS */}
+        <TenureHighlightsSection monarch={selectedMonarch} theme="royal" />
       </div>
     </div>
   );

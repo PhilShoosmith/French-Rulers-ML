@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Monarch } from '../types';
 import { useTranslation } from 'react-i18next';
 import { getPresidentCareer } from '../services/careerData';
+import { TenureHighlightsSection } from './TenureHighlightsSection';
 
 interface PresidentCareerViewProps {
   selectedPresident: Monarch;
@@ -227,6 +228,9 @@ export const PresidentCareerView: React.FC<PresidentCareerViewProps> = ({
             </div>
           </div>
         </div>
+
+        {/* SECTION: TENURE HIGHLIGHTS & CONTEMPORARY WORLD LEADERS */}
+        <TenureHighlightsSection monarch={selectedPresident} theme="republic" />
 
       </div>
     </div>

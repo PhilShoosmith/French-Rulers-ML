@@ -122,3 +122,24 @@ export interface MonarchGenealogy {
   otherChildren?: ChildData[];
   bioSummary?: string;
 }
+
+export interface TenureLeader {
+  name: string;
+  nameFr?: string;
+  years: string;
+  notes?: string;
+}
+
+export interface TenureHighlightsData {
+  monarchId: number;
+  highlights: string[];
+  highlightsFr?: string[];
+  ukMonarchs: TenureLeader[];
+  ukPrimeMinisters: TenureLeader[];
+  usPresidents: TenureLeader[];
+  prePmNote?: string;
+  prePmNoteFr?: string;
+  prePresNote?: string;
+  prePresNoteFr?: string;
+}
+
