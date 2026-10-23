@@ -76,12 +76,12 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
 
   return (
     <div
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-2 sm:p-4 animate-fade-in overflow-hidden"
       onClick={onClose}
     >
       <Confetti />
       <div
-        className="bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col animate-scale-in"
+        className="bg-slate-800 border border-slate-700 rounded-xl sm:rounded-2xl shadow-2xl max-w-3xl w-full max-h-[94vh] sm:max-h-[90vh] flex flex-col animate-scale-in overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <audio 
@@ -91,20 +91,20 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
           <source src="https://upload.wikimedia.org/wikipedia/commons/3/30/La_Marseillaise.ogg" type="audio/ogg" />
           <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/3/30/La_Marseillaise.ogg/La_Marseillaise.ogg.mp3" type="audio/mpeg" />
         </audio>
-        <header className="p-4 sm:p-6 border-b border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+        <header className="p-3 sm:p-5 border-b border-slate-700 flex flex-col md:flex-row justify-between items-center gap-2.5 sm:gap-4">
           <div className="flex-1 text-center md:text-left">
-            <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 whitespace-nowrap">
-              <span className="text-amber-500 mr-2 drop-shadow-sm">🏆</span>{t('hallOfFame')}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 whitespace-nowrap">
+              <span className="text-amber-500 mr-1.5 drop-shadow-sm">🏆</span>{t('hallOfFame')}
             </h2>
           </div>
 
           <div className="flex-1 flex justify-center w-full md:w-auto">
-            <div className="flex bg-slate-900/50 p-1 rounded-lg border border-slate-700/50">
+            <div className="flex bg-slate-900/50 p-0.5 sm:p-1 rounded-lg border border-slate-700/50 max-w-full overflow-x-auto no-scrollbar">
               {(['week', 'month', 'all'] as Timeframe[]).map((tf) => (
                 <button
                   key={tf}
                   onClick={() => setTimeframe(tf)}
-                  className={`px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-2 sm:px-3 py-1 sm:py-1.5 text-[9px] sm:text-xs rounded-md font-medium transition-colors whitespace-nowrap ${
                     timeframe === tf
                       ? 'bg-amber-500/20 text-amber-400 shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
@@ -116,17 +116,17 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
             </div>
           </div>
 
-          <div className="flex-1 flex items-center justify-center md:justify-end gap-3 sm:gap-4 w-full md:w-auto">
+          <div className="flex-1 flex items-center justify-center md:justify-end gap-2 sm:gap-3 w-full md:w-auto">
             <button
               onClick={togglePlay}
-              className="p-2 rounded-full bg-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-600 transition-colors"
+              className="p-1.5 sm:p-2 rounded-full bg-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-600 transition-colors"
               title={isPlaying ? t('pauseAnthem') : t('playAnthem')}
             >
-              {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+              {isPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-slate-700/50 hover:bg-slate-600 text-white rounded-lg transition-colors font-bold whitespace-nowrap"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-700/50 hover:bg-slate-600 text-white rounded-lg transition-colors font-bold text-xs sm:text-sm whitespace-nowrap"
             >
               {t('backToStart', 'Back to Start')}
             </button>
@@ -138,7 +138,7 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
             <button
               key={mode}
               onClick={() => setActiveTab(mode)}
-              className={`flex-1 py-4 text-sm font-bold transition-all duration-300 ${
+              className={`flex-1 py-2.5 sm:py-3 px-1 sm:px-3 text-xs sm:text-sm font-bold transition-all duration-300 text-center truncate ${
                 activeTab === mode 
                   ? 'text-yellow-400 border-b-2 border-yellow-400 bg-slate-700/30' 
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/10'
@@ -149,38 +149,44 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
           ))}
         </div>
 
-        <div className="p-6 overflow-y-auto flex-grow min-h-[300px] flex flex-col">
+        <div className="p-2 sm:p-4 md:p-6 overflow-y-auto overflow-x-hidden flex-grow min-h-[240px] sm:min-h-[300px] flex flex-col w-full">
           {isLoading ? (
             <div className="flex-grow flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-yellow-400"></div>
             </div>
           ) : scores.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
-              <p className="text-xl">{t('noLegendsYet')}</p>
-              <p className="mt-2">{t('beTheFirst')}</p>
+            <div className="text-center py-10 sm:py-12 text-slate-500">
+              <p className="text-base sm:text-xl">{t('noLegendsYet')}</p>
+              <p className="mt-1 sm:mt-2 text-xs sm:text-sm">{t('beTheFirst')}</p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
+            <table className="w-full table-fixed border-collapse">
+              <colgroup>
+                <col className="w-10 sm:w-16" />
+                <col className="w-auto" />
+                <col className="w-16 sm:w-24" />
+                <col className="w-16 sm:w-24" />
+              </colgroup>
               <thead>
-                <tr className="text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700/50">
-                  <th className="py-3 px-4">{t('rank')}</th>
-                  <th className="py-3 px-4">{t('player')}</th>
-                  <th className="py-3 px-4 text-center">{t('correct')}</th>
-                  <th className="py-3 px-4 text-center">{t('timeLeft')}</th>
+                <tr className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider border-b border-slate-700/50">
+                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-center sm:text-left">{t('rank')}</th>
+                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-left">{t('player')}</th>
+                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-center">{t('correct')}</th>
+                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-center">{t('timeLeft')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/30">
                 {scores.map((score, index) => (
                   <tr key={index} className="group hover:bg-slate-700/20 transition-colors">
-                    <td className="py-4 px-4 font-bold text-slate-400">
+                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 font-bold text-slate-400 text-center sm:text-left text-xs sm:text-sm">
                       {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                     </td>
-                    <td className="py-4 px-4 font-semibold text-white">
-                      {score.name}
-                      <div className="text-[10px] text-slate-500 font-normal">{new Date(score.date).toLocaleDateString()}</div>
+                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 text-xs sm:text-sm font-semibold text-white overflow-hidden">
+                      <div className="truncate" title={score.name}>{score.name}</div>
+                      <div className="text-[9px] sm:text-[10px] text-slate-500 font-normal truncate">{new Date(score.date).toLocaleDateString()}</div>
                     </td>
-                    <td className="py-4 px-4 text-center text-green-400 font-bold">{score.score}</td>
-                    <td className="py-4 px-4 text-center text-yellow-300 font-mono">{score.timeLeft}s</td>
+                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 text-center text-green-400 font-bold text-xs sm:text-sm">{score.score}</td>
+                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 text-center text-yellow-300 font-mono text-xs sm:text-sm">{score.timeLeft}s</td>
                   </tr>
                 ))}
               </tbody>
@@ -188,8 +194,8 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
           )}
         </div>
 
-        <footer className="p-4 border-t border-slate-700 bg-slate-900/30 flex justify-center">
-          <p className="text-xs text-slate-500 italic">{t('scoresRankedBy')}</p>
+        <footer className="p-2.5 sm:p-4 border-t border-slate-700 bg-slate-900/30 flex justify-center text-center">
+          <p className="text-[10px] sm:text-xs text-slate-500 italic">{t('scoresRankedBy')}</p>
         </footer>
       </div>
     </div>

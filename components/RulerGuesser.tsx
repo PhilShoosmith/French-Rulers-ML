@@ -93,22 +93,22 @@ const RulerGuesser: React.FC<RulerGuesserProps> = ({ allMonarchs, correctMonarch
 
 
   return (
-    <div className="p-6 bg-slate-800/50 rounded-2xl border border-slate-700/50 animate-fade-in-up w-full">
-      <p className="text-lg md:text-xl text-slate-300 font-light mb-4 text-center">
+    <div className="p-2.5 sm:p-5 bg-slate-800/80 rounded-xl sm:rounded-2xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full max-w-xl mx-auto">
+      <p className="text-xs sm:text-base md:text-lg text-slate-300 font-medium mb-1.5 sm:mb-2 text-center">
         {t('whichFrenchLeader')}
       </p>
-      <blockquote className="my-6 p-4 border-l-4 border-amber-500 bg-slate-900/50 rounded-r-lg">
-        <p className="text-slate-200 italic leading-relaxed">
+      <blockquote className="my-2 sm:my-3 p-2.5 sm:p-3.5 border-l-4 border-amber-500 bg-slate-900/60 rounded-r-lg max-h-24 sm:max-h-36 overflow-y-auto custom-scrollbar">
+        <p className="text-xs sm:text-sm text-slate-200 italic leading-snug">
           "{getMonarchContext(correctMonarch)}"
         </p>
       </blockquote>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-2 sm:mt-4">
         {options.map((option, index) => (
           <button
             key={option.id}
             onClick={() => handleGuess(option.id)}
             disabled={disabled || !!selection}
-            className={`w-full px-6 py-4 text-white font-bold text-lg rounded-lg transform transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 animate-fade-in-up ${getButtonClass(option.id)}`}
+            className={`w-full px-2.5 py-2 sm:py-3 text-white font-bold text-xs sm:text-sm md:text-base rounded-lg transform active:scale-95 transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 animate-fade-in-up truncate ${getButtonClass(option.id)}`}
             style={{ animationDelay: `${index * 100}ms` }}
           >
             {getMonarchName(option)}

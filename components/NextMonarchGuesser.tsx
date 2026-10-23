@@ -126,7 +126,7 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({
   };
 
   const selectClasses = [
-    'w-full bg-slate-800/90 border border-slate-600 rounded-xl pl-10 pr-16 py-3 text-white text-base sm:text-lg focus:outline-none focus:ring-2 transition-all duration-300 disabled:opacity-50 shadow-inner',
+    'w-full bg-slate-800/90 border border-slate-600 rounded-xl pl-9 pr-14 py-2 sm:py-2.5 text-sm sm:text-base text-white focus:outline-none focus:ring-2 transition-all duration-300 disabled:opacity-50 shadow-inner',
     feedback === 'correct'
       ? 'border-green-500 ring-green-500 bg-green-950/60'
       : feedback === 'incorrect'
@@ -135,7 +135,7 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({
   ].join(' ');
 
   const buttonClasses = [
-    'w-full sm:w-auto px-7 py-3 text-white font-bold rounded-xl transform transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 whitespace-nowrap',
+    'w-full sm:w-auto px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-white rounded-xl transform transition-all duration-200 shadow-md focus:outline-none focus:ring-2 whitespace-nowrap',
     !selectedId || !!feedback || disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95',
     feedback === 'correct'
       ? 'bg-green-600 focus:ring-green-500/50'
@@ -145,7 +145,7 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({
   ].join(' ');
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full">
       <div ref={wrapperRef} className="relative w-full flex-grow">
         {/* Search Icon */}
         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-base">
@@ -220,7 +220,7 @@ const NextMonarchGuesser: React.FC<NextMonarchGuesserProps> = ({
           <ul
             ref={listRef}
             role="listbox"
-            className="absolute z-50 left-0 right-0 mt-1.5 max-h-72 overflow-y-auto bg-slate-900 border border-slate-700 rounded-xl shadow-2xl divide-y divide-slate-800 custom-scrollbar animate-fade-in"
+            className="absolute z-50 left-0 right-0 mt-1 max-h-48 sm:max-h-72 overflow-y-auto bg-slate-900 border border-slate-700 rounded-xl shadow-2xl divide-y divide-slate-800 custom-scrollbar animate-fade-in"
           >
             {filteredMonarchs.length > 0 ? (
               filteredMonarchs.map((monarch, index) => {

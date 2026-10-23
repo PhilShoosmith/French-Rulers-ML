@@ -55,11 +55,11 @@ const TimelineMarker: React.FC<{ monarch: Monarch; leftPercentage: number; isCor
             </div>
 
             {/* Marker Dot / Avatar */}
-            <div className={`relative w-8 h-8 rounded-full shadow-lg border-2 overflow-hidden transition-transform duration-200 group-hover:scale-125 cursor-help ${isCorrect ? 'border-green-400 ring-2 ring-green-500/50' : 'border-slate-400 bg-slate-700'}`}>
+            <div className={`relative w-6 h-6 sm:w-8 sm:h-8 rounded-full shadow-lg border-2 overflow-hidden transition-transform duration-200 group-hover:scale-125 cursor-help ${isCorrect ? 'border-green-400 ring-2 ring-green-500/50' : 'border-slate-400 bg-slate-700'}`}>
                 {monarch.imageUrl ? (
                     <img src={monarch.imageUrl} alt={displayName} className="w-full h-full object-cover" />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center font-bold text-xs bg-slate-800 text-slate-300">
+                    <div className="w-full h-full flex items-center justify-center font-bold text-[10px] sm:text-xs bg-slate-800 text-slate-300">
                         {displayName.charAt(0)}
                     </div>
                 )}
@@ -67,7 +67,7 @@ const TimelineMarker: React.FC<{ monarch: Monarch; leftPercentage: number; isCor
             
             {/* Year Label (only visible on hover or if it's the current answer) */}
             {isCorrect && (
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-green-500/20 border border-green-500 px-2 py-1 rounded text-sm text-green-300 whitespace-nowrap opacity-100 transition-opacity">
+                <div className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 bg-green-500/20 border border-green-500 px-1.5 sm:px-2 py-0.5 rounded text-xs sm:text-sm text-green-300 whitespace-nowrap opacity-100 shadow-md z-40">
                     {t('correct')}: {monarch.reignStart}
                 </div>
             )}
@@ -135,28 +135,28 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
   }
 
   return (
-    <div className="w-full py-2 sm:py-3 px-2 sm:px-4 relative">
+    <div className="w-full py-1 sm:py-2 px-1 sm:px-4 relative flex-shrink-0">
        {/* Historical Periods Background */}
-      <div className="relative mb-2 sm:mb-2.5 w-full h-8 sm:h-9 flex items-center rounded-lg overflow-hidden border border-slate-700">
+      <div className="relative mb-1.5 sm:mb-2 w-full h-6 sm:h-8 flex items-center rounded-lg overflow-hidden border border-slate-700/80 shadow-inner">
         {HISTORICAL_PERIODS.map(period => (
             <div 
                 key={period.name}
-                className={`h-full flex items-center justify-center gap-1 sm:gap-2 px-1 sm:px-2 overflow-hidden ${period.color}`}
+                className={`h-full flex items-center justify-center gap-0.5 sm:gap-1.5 px-0.5 sm:px-1.5 overflow-hidden ${period.color}`}
                 style={{
                     position: 'absolute',
                     left: `${yearToPercentage(period.start)}%`,
                     width: `${yearToPercentage(period.end) - yearToPercentage(period.start)}%`,
                 }}
             >
-                <HouseIcon house={periodToHouseMap[period.name]} className={`h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 opacity-80 ${period.textColor}`} />
-                <span className={`text-xs sm:text-sm font-semibold opacity-80 select-none truncate ${period.textColor}`}>{t(`period_${period.name.replace(' & ', 'And')}`)}</span>
+                <HouseIcon house={periodToHouseMap[period.name]} className={`h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0 opacity-85 ${period.textColor}`} />
+                <span className={`text-[9px] sm:text-xs font-semibold opacity-90 select-none truncate ${period.textColor}`}>{t(`period_${period.name.replace(' & ', 'And')}`)}</span>
             </div>
         ))}
       </div>
 
       <div
         ref={timelineRef}
-        className="w-full h-3 bg-slate-700 rounded-full cursor-pointer relative touch-none"
+        className="w-full h-2.5 sm:h-3.5 bg-slate-700 rounded-full cursor-pointer relative touch-none my-1"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
@@ -189,9 +189,9 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
         ))}
 
         {hoverYear && !disabled && (
-          <div className="absolute top-1/2 -translate-y-1/2 pointer-events-none z-20" style={{ left: `${yearToPercentage(hoverYear)}%` }}>
-            <div className="h-8 w-1 bg-yellow-400 transform -translate-y-1/2 top-1/2 absolute"></div>
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 px-2 py-1 rounded text-sm text-yellow-300 whitespace-nowrap">{hoverYear}</div>
+          <div className="absolute top-1/2 -translate-y-1/2 pointer-events-none z-30" style={{ left: `${yearToPercentage(hoverYear)}%` }}>
+            <div className="h-6 sm:h-8 w-1 bg-yellow-400 transform -translate-y-1/2 top-1/2 absolute"></div>
+            <div className="absolute -top-7 sm:-top-8 left-1/2 -translate-x-1/2 bg-slate-900 border border-yellow-500/50 px-1.5 py-0.5 rounded text-xs text-yellow-300 font-bold whitespace-nowrap shadow-lg">{hoverYear}</div>
           </div>
         )}
 
@@ -199,7 +199,7 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
           <>
              {/* Correct Range Highlight */}
              <div
-                className="absolute top-1/2 -translate-y-1/2 h-5 bg-green-500/30 rounded-full animate-pop-in-marker border border-green-500/50"
+                className="absolute top-1/2 -translate-y-1/2 h-4 sm:h-5 bg-green-500/30 rounded-full animate-pop-in-marker border border-green-500/50"
                 style={{
                     left: `${yearToPercentage(lastGuess.correctYear - YEAR_TOLERANCE)}%`,
                     width: `${(YEAR_TOLERANCE * 2 / totalYears) * 100}%`
@@ -222,8 +222,8 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
                 className="absolute top-1/2 -translate-y-1/2 animate-pop-in-marker animation-delay-400 z-40" 
                 style={{ left: `${yearToPercentage(lastGuess.guessedYear)}%` }}
               >
-                 <div className="h-8 w-1 bg-red-500 transform -translate-y-1/2 top-1/2 absolute"></div>
-                 <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-red-500/20 border border-red-500 px-2 py-1 rounded text-sm text-red-300 whitespace-nowrap">
+                 <div className="h-6 sm:h-8 w-1 bg-red-500 transform -translate-y-1/2 top-1/2 absolute"></div>
+                 <div className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 bg-red-500/20 border border-red-500 px-1.5 sm:px-2 py-0.5 rounded text-xs sm:text-sm text-red-300 whitespace-nowrap shadow-md">
                    {t('yourGuess')}: {lastGuess.guessedYear}
                  </div>
               </div>
@@ -233,15 +233,17 @@ const Timeline: React.FC<TimelineProps> = ({ onGuess, disabled, lastGuess, curre
       </div>
 
       {/* Century Markers */}
-      <div className="mt-4 w-full h-6 relative">
+      <div className="mt-6 sm:mt-7 w-full h-4 sm:h-5 relative">
         {centuryMarkers.map(year => (
           <div
             key={year}
-            className="absolute top-0"
+            className="absolute top-0 flex flex-col items-center"
             style={{ left: `${yearToPercentage(year)}%`, transform: 'translateX(-50%)' }}
           >
-            <div className="w-px h-2 bg-slate-600"></div>
-            <span className="text-xs text-slate-500 select-none">{year}</span>
+            <div className="w-px h-1.5 sm:h-2 bg-slate-600"></div>
+            <span className={`text-[9px] sm:text-xs text-slate-400 select-none ${year % 200 !== 0 && year !== 2000 ? 'hidden sm:inline' : 'inline'}`}>
+              {year}
+            </span>
           </div>
         ))}
       </div>

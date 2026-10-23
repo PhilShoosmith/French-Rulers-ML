@@ -77,33 +77,33 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, totalTimeLeft, mode, onRes
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center relative overflow-hidden bg-slate-900">
+    <div className="w-full h-[100dvh] max-h-[100dvh] flex items-center justify-center relative overflow-hidden bg-slate-900 p-3 sm:p-6">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 via-slate-900 to-slate-900 opacity-80"></div>
-      <div className="relative text-center p-8 bg-slate-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-slate-700 max-w-lg mx-auto z-10 animate-fade-in-up">
-        <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 mb-2 animate-fade-in-up animation-delay-200">
+      <div className="relative text-center p-4 sm:p-8 bg-slate-800/85 backdrop-blur-lg rounded-2xl shadow-2xl border border-slate-700 max-w-md w-full mx-auto z-10 animate-fade-in-up my-auto">
+        <h2 className="text-3xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 mb-1 sm:mb-2 animate-fade-in-up animation-delay-200">
           {t('gameOver')}
         </h2>
-        <h3 className="text-3xl font-bold text-slate-200 mb-4 animate-fade-in-up animation-delay-400">{title}</h3>
-        <p className="text-lg text-slate-300 mb-6 animate-fade-in-up animation-delay-600">
+        <h3 className="text-xl sm:text-3xl font-bold text-slate-200 mb-1 sm:mb-3 animate-fade-in-up animation-delay-400">{title}</h3>
+        <p className="text-xs sm:text-base text-slate-300 mb-3 sm:mb-6 animate-fade-in-up animation-delay-600 line-clamp-2 sm:line-clamp-none">
             {message}
         </p>
 
-        <div className="w-full bg-slate-900/50 rounded-lg p-4 my-8 flex justify-around text-center animate-fade-in-up animation-delay-800">
-          <div className="px-4">
-              <p className="text-5xl font-bold text-green-400 transition-all duration-300">{displayScore}</p>
-              <p className="text-slate-400 mt-1 text-sm uppercase tracking-wider">{t('correct')}</p>
+        <div className="w-full bg-slate-900/50 rounded-xl p-2.5 sm:p-4 my-3 sm:my-6 flex justify-around text-center animate-fade-in-up animation-delay-800 border border-slate-700/60">
+          <div className="px-2 sm:px-4">
+              <p className="text-3xl sm:text-5xl font-bold text-green-400 transition-all duration-300">{displayScore}</p>
+              <p className="text-slate-400 mt-0.5 text-xs uppercase tracking-wider">{t('correct')}</p>
           </div>
           <div className="border-l border-slate-700"></div>
-          <div className="px-4">
-              <p className="text-5xl font-bold text-yellow-400 transition-all duration-300">{totalTimeLeft}s</p>
-              <p className="text-slate-400 mt-1 text-sm uppercase tracking-wider">{t('timeBonus')}</p>
+          <div className="px-2 sm:px-4">
+              <p className="text-3xl sm:text-5xl font-bold text-yellow-400 transition-all duration-300">{totalTimeLeft}s</p>
+              <p className="text-slate-400 mt-0.5 text-xs uppercase tracking-wider">{t('timeBonus')}</p>
           </div>
         </div>
 
         {!isCheckingScore && showSubmission && !isSubmitted && (
-          <div className="mb-8 p-6 bg-yellow-400/10 border border-yellow-400/30 rounded-xl animate-scale-in">
-            <h4 className="text-yellow-400 font-bold text-lg mb-2">{t('newGlobalHighScore')}</h4>
-            <p className="text-slate-300 text-sm mb-4">{t('enterName')}</p>
+          <div className="mb-3 sm:mb-6 p-3 sm:p-5 bg-yellow-400/10 border border-yellow-400/30 rounded-xl animate-scale-in">
+            <h4 className="text-yellow-400 font-bold text-sm sm:text-base mb-1">{t('newGlobalHighScore')}</h4>
+            <p className="text-slate-300 text-xs mb-2 sm:mb-3">{t('enterName')}</p>
             <form onSubmit={handleSubmit} className="flex gap-2">
               <input
                 type="text"
@@ -112,11 +112,11 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, totalTimeLeft, mode, onRes
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
                 placeholder="Your Name"
-                className="bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white flex-grow focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-1.5 text-xs sm:text-sm text-white flex-grow focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
               <button
                 type="submit"
-                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-4 py-2 rounded-lg transition-colors"
+                className="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors whitespace-nowrap active:scale-95"
               >
                 {t('submitScore')}
               </button>
@@ -125,11 +125,11 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, totalTimeLeft, mode, onRes
         )}
 
         {isSubmitted && (
-           <div className="mb-8 p-4 bg-green-500/10 border border-green-500/30 rounded-xl animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-green-400 font-bold text-center sm:text-left">{t('joinedLegends')}</p>
+           <div className="mb-3 sm:mb-6 p-2.5 sm:p-4 bg-green-500/10 border border-green-500/30 rounded-xl animate-fade-in flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
+            <p className="text-green-400 font-bold text-xs sm:text-sm text-center sm:text-left">{t('joinedLegends')}</p>
             <button
               onClick={onViewHallOfFame}
-              className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors text-sm shadow-md"
+              className="w-full sm:w-auto px-3 py-1.5 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors text-xs shadow-md"
             >
               {t('viewHallOfFame')}
             </button>
@@ -138,7 +138,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ score, totalTimeLeft, mode, onRes
       
         <button
           onClick={onRestart}
-          className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 animate-fade-in-up animation-delay-1000"
+          className="px-6 py-2.5 sm:px-8 sm:py-3 bg-blue-600 text-white font-bold text-sm sm:text-base rounded-lg hover:bg-blue-700 transform active:scale-95 transition-all duration-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 animate-fade-in-up animation-delay-1000"
         >
           {t('playAgain')}
         </button>

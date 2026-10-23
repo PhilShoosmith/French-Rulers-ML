@@ -74,58 +74,58 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalR
   );
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-slate-900/80 backdrop-blur-md p-2 z-50 border-b border-slate-700 shadow-lg">
+    <div className="w-full bg-slate-900/90 backdrop-blur-md px-2 sm:px-4 py-1 sm:py-2 z-40 border-b border-slate-700/80 shadow-md flex-shrink-0">
       <div className="max-w-7xl mx-auto">
         {/* Desktop Layout */}
-        <div className="hidden sm:grid grid-cols-3 items-center text-lg font-semibold min-h-[4rem]">
-          <div className="flex flex-row items-center gap-4 text-slate-300 text-lg">
-            <div>{t('correct')}: <span className="text-green-400 font-bold text-xl">{score}</span></div>
-            <div>{t('incorrect')}: <span className="text-red-400 font-bold text-xl">{incorrect}</span></div>
+        <div className="hidden sm:grid grid-cols-3 items-center text-lg font-semibold min-h-[3.5rem]">
+          <div className="flex flex-row items-center gap-4 text-slate-300 text-base lg:text-lg">
+            <div>{t('correct')}: <span className="text-green-400 font-bold text-lg lg:text-xl">{score}</span></div>
+            <div>{t('incorrect')}: <span className="text-red-400 font-bold text-lg lg:text-xl">{incorrect}</span></div>
           </div>
           
-          {renderTimer("text-xl")}
+          {renderTimer("text-lg lg:text-xl")}
 
-          <div className="text-slate-300 text-right text-lg flex items-center justify-end gap-4">
+          <div className="text-slate-300 text-right text-base lg:text-lg flex items-center justify-end gap-3 lg:gap-4">
             <div>
-              {t('round')}: <span className="text-white font-bold text-xl">{round}</span> / {totalRounds}
+              {t('round')}: <span className="text-white font-bold text-lg lg:text-xl">{round}</span> / {totalRounds}
             </div>
             <button
               onClick={() => {
                 audioService.resumeAudio();
                 audioService.toggleMute();
               }}
-              className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="p-1.5 lg:p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               title={isMuted ? "Unmute Sound" : "Mute Sound"}
               aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
             >
-              {isMuted ? <VolumeX className="w-5 h-5 text-red-400" /> : <Volume2 className="w-5 h-5 text-cyan-400" />}
+              {isMuted ? <VolumeX className="w-4 h-4 lg:w-5 lg:h-5 text-red-400" /> : <Volume2 className="w-4 h-4 lg:w-5 lg:h-5 text-cyan-400" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Layout */}
-        <div className="sm:hidden relative flex justify-between items-center px-2 w-full font-semibold h-14">
-          <div className="flex gap-4">
+        <div className="sm:hidden relative flex justify-between items-center px-1 w-full font-semibold h-11">
+          <div className="flex gap-3">
             <div className="flex flex-col items-center">
-              <span className="text-slate-400 text-[10px] uppercase tracking-wider">{t('correct')}</span>
-              <span className="text-green-400 font-bold text-lg leading-none mt-1">{score}</span>
+              <span className="text-slate-400 text-[9px] uppercase tracking-wider">{t('correct')}</span>
+              <span className="text-green-400 font-bold text-base leading-none mt-0.5">{score}</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-slate-400 text-[10px] uppercase tracking-wider">{t('incorrect')}</span>
-              <span className="text-red-400 font-bold text-lg leading-none mt-1">{incorrect}</span>
+              <span className="text-slate-400 text-[9px] uppercase tracking-wider">{t('incorrect')}</span>
+              <span className="text-red-400 font-bold text-base leading-none mt-0.5">{incorrect}</span>
             </div>
           </div>
           
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-shrink-0">
-            {renderTimer("text-lg")}
+            {renderTimer("text-sm")}
           </div>
 
           <div className="flex items-center gap-2">
             <div className="flex flex-col items-center">
-              <span className="text-slate-400 text-[10px] uppercase tracking-wider">{t('round')}</span>
-              <div className="mt-1 leading-none">
-                <span className="text-white font-bold text-lg">{round}</span>
-                <span className="text-slate-400 text-xs">/{totalRounds}</span>
+              <span className="text-slate-400 text-[9px] uppercase tracking-wider">{t('round')}</span>
+              <div className="mt-0.5 leading-none">
+                <span className="text-white font-bold text-base">{round}</span>
+                <span className="text-slate-400 text-[10px]">/{totalRounds}</span>
               </div>
             </div>
             <button
@@ -133,11 +133,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ score, incorrect, round, totalR
                 audioService.resumeAudio();
                 audioService.toggleMute();
               }}
-              className="p-1.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 focus:outline-none"
+              className="p-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 focus:outline-none"
               title={isMuted ? "Unmute Sound" : "Mute Sound"}
               aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
             >
-              {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+              {isMuted ? <VolumeX className="w-3.5 h-3.5 text-red-400" /> : <Volume2 className="w-3.5 h-3.5 text-cyan-400" />}
             </button>
           </div>
         </div>

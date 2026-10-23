@@ -22,9 +22,9 @@ const ReviewMonarchCard: React.FC<{
     return (
         <div 
             onClick={() => onLearnMore(monarch)}
-            className="flex-shrink-0 w-72 sm:w-80 md:w-96 h-[28rem] sm:h-[32rem] md:h-[40rem] bg-slate-800 border border-slate-700 rounded-2xl shadow-lg p-4 md:p-6 flex flex-col mx-3 sm:mx-6 transition-transform duration-300 hover:!scale-105 hover:shadow-2xl hover:border-blue-500/50 cursor-pointer"
+            className="flex-shrink-0 w-64 sm:w-80 md:w-96 h-[23rem] sm:h-[30rem] md:h-[38rem] bg-slate-800 border border-slate-700 rounded-2xl shadow-lg p-3 sm:p-4 md:p-5 flex flex-col mx-2 sm:mx-6 transition-transform duration-300 hover:!scale-105 hover:shadow-2xl hover:border-blue-500/50 cursor-pointer"
         >
-            <div className="relative w-full h-48 sm:h-56 md:h-72 mb-3 md:mb-4">
+            <div className="relative w-full h-32 sm:h-44 md:h-56 mb-1.5 sm:mb-3 flex-shrink-0">
                 <img
                     src={monarch.imageUrl}
                     alt={`Portrait of ${displayName}`}
@@ -32,10 +32,10 @@ const ReviewMonarchCard: React.FC<{
                 />
             </div>
             <div className="flex flex-col flex-grow overflow-hidden">
-                <h3 className="text-xl md:text-2xl font-bold text-white truncate text-center">{displayName}</h3>
-                <p className="text-sm md:text-base text-slate-400 text-center">{displayTitle}</p>
-                <p className="text-xs md:text-sm font-mono text-amber-300/80 mt-1 md:mt-2 text-center">{monarch.reignStart} – {reignEndDisplay}</p>
-                <div className="text-sm md:text-base leading-snug md:leading-relaxed text-slate-300 mt-2 md:mt-4 flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate text-center">{displayName}</h3>
+                <p className="text-xs sm:text-sm md:text-base text-slate-400 text-center truncate">{displayTitle}</p>
+                <p className="text-[11px] sm:text-xs md:text-sm font-mono text-amber-300/80 mt-0.5 sm:mt-1 text-center">{monarch.reignStart} – {reignEndDisplay}</p>
+                <div className="text-xs sm:text-xs md:text-sm leading-normal sm:leading-snug md:leading-relaxed text-slate-300 mt-1.5 sm:mt-2 md:mt-3 flex-grow overflow-y-auto pr-1.5 custom-scrollbar">
                    <p>{displayContext}</p>
                 </div>
                 <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-700/60 flex-shrink-0">
