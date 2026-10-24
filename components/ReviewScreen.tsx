@@ -3,10 +3,10 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Monarch } from '../types';
 import SearchPopup from './SearchPopup';
 import { HISTORICAL_PERIODS } from '../constants';
-import { FastForward, Rewind, Play, Pause } from 'lucide-react';
+import { FastForward, Rewind, Play, Pause, BookOpen, Crown, Landmark } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-// A simplified card specifically for the review screen carousel.
+// A simplified card specifically for the review screen carousel following the Lord North example.
 const ReviewMonarchCard: React.FC<{ 
     monarch: Monarch; 
     onLearnMore: (monarch: Monarch) => void; 
@@ -16,49 +16,72 @@ const ReviewMonarchCard: React.FC<{
     const reignEndDisplay = monarch.reignEnd ?? t('present');
 
     const displayName = i18n.language === 'fr' && monarch.nameFr ? monarch.nameFr : i18n.language === 'ja' && monarch.nameJa ? monarch.nameJa : i18n.language === 'zh' && monarch.nameZh ? monarch.nameZh : i18n.language === 'es' && monarch.nameEs ? monarch.nameEs : i18n.language === 'hi' && monarch.nameHi ? monarch.nameHi : i18n.language === 'ar' && monarch.nameAr ? monarch.nameAr : monarch.name;
-    const displayTitle = i18n.language === 'fr' && monarch.titleFr ? monarch.titleFr : i18n.language === 'ja' && monarch.titleJa ? monarch.titleJa : i18n.language === 'zh' && monarch.titleZh ? monarch.titleZh : i18n.language === 'es' && monarch.titleEs ? monarch.titleEs : i18n.language === 'hi' && monarch.titleHi ? monarch.titleHi : i18n.language === 'ar' && monarch.titleAr ? monarch.titleAr : monarch.title;
     const displayContext = i18n.language === 'fr' && monarch.contextFr ? monarch.contextFr : i18n.language === 'ja' && monarch.contextJa ? monarch.contextJa : i18n.language === 'zh' && monarch.contextZh ? monarch.contextZh : i18n.language === 'es' && monarch.contextEs ? monarch.contextEs : i18n.language === 'hi' && monarch.contextHi ? monarch.contextHi : i18n.language === 'ar' && monarch.contextAr ? monarch.contextAr : monarch.context;
 
     return (
         <div 
             onClick={() => onLearnMore(monarch)}
-            className="flex-shrink-0 w-64 sm:w-80 md:w-96 h-[23rem] sm:h-[30rem] md:h-[38rem] bg-slate-800 border border-slate-700 rounded-2xl shadow-lg p-3 sm:p-4 md:p-5 flex flex-col mx-2 sm:mx-6 transition-transform duration-300 hover:!scale-105 hover:shadow-2xl hover:border-blue-500/50 cursor-pointer"
+            className="flex-shrink-0 w-72 sm:w-80 md:w-[320px] h-[460px] sm:h-[490px] md:h-[510px] bg-[#121927] border border-slate-700/80 rounded-2xl shadow-xl p-3.5 sm:p-4 flex flex-col mx-2 sm:mx-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:border-blue-500/60 cursor-pointer select-none"
         >
-            <div className="relative w-full h-32 sm:h-44 md:h-56 mb-1.5 sm:mb-3 flex-shrink-0">
+            <div className="relative w-full h-52 sm:h-58 md:h-64 rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 flex-shrink-0 shadow-inner">
                 <img
                     src={monarch.imageUrl}
                     alt={`Portrait of ${displayName}`}
-                    className="w-full h-full object-contain rounded-xl bg-slate-700"
+                    className="w-full h-full object-cover object-top"
+                    loading="lazy"
                 />
             </div>
-            <div className="flex flex-col flex-grow overflow-hidden">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate text-center">{displayName}</h3>
-                <p className="text-xs sm:text-sm md:text-base text-slate-400 text-center truncate">{displayTitle}</p>
-                <p className="text-[11px] sm:text-xs md:text-sm font-mono text-amber-300/80 mt-0.5 sm:mt-1 text-center">{monarch.reignStart} – {reignEndDisplay}</p>
-                <div className="text-xs sm:text-xs md:text-sm leading-normal sm:leading-snug md:leading-relaxed text-slate-300 mt-1.5 sm:mt-2 md:mt-3 flex-grow overflow-y-auto pr-1.5 custom-scrollbar">
-                   <p>{displayContext}</p>
+            <div className="flex flex-col flex-grow justify-between min-h-0 pt-2.5 sm:pt-3">
+                <div className="flex flex-col flex-shrink-0">
+                    <h3 className="text-base sm:text-lg md:text-xl font-bold text-white text-center tracking-tight truncate px-1">
+                        {displayName}
+                    </h3>
+                    <p className="text-xs sm:text-sm font-semibold text-amber-400 text-center mt-0.5 tracking-wide font-mono">
+                        {monarch.reignStart} – {reignEndDisplay}
+                    </p>
                 </div>
-                <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-700/60 flex-shrink-0">
-                    <span className="text-xs text-blue-400 font-semibold">
-                        {t('learn')} →
-                    </span>
-                    {onOpenFamilyTree && (
+                
+                <div className="my-2 sm:my-2.5 flex-grow min-h-0 flex items-start overflow-hidden px-1">
+                    <p className="text-xs sm:text-[13px] leading-relaxed text-slate-300 text-left line-clamp-3 sm:line-clamp-4">
+                        {displayContext}
+                    </p>
+                </div>
+
+                <div className="pt-2.5 sm:pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 sm:gap-2.5 flex-shrink-0">
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onLearnMore(monarch);
+                        }}
+                        className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-[#14233a] hover:bg-[#1d3252] border border-[#264875] hover:border-blue-400 text-blue-300 hover:text-white transition-all text-xs font-semibold shadow-sm active:scale-95"
+                        title={t('learnMore', 'Learn More')}
+                    >
+                        <BookOpen size={14} className="text-blue-400 flex-shrink-0" />
+                        <span className="truncate">{t('learnMore', 'Learn More')}</span>
+                    </button>
+
+                    {onOpenFamilyTree ? (
                         <button
                             type="button"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onOpenFamilyTree(monarch);
                             }}
-                            className={`text-xs px-2.5 py-1 rounded-full font-semibold transition-colors flex items-center gap-1 shadow-sm border ${
-                                monarch.house === 'Republic' 
-                                    ? 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border-blue-500/30'
-                                    : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border-amber-500/30'
-                            }`}
+                            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg bg-[#251b11] hover:bg-[#382818] border border-[#5d4320] hover:border-amber-400 text-amber-400 hover:text-amber-300 transition-all text-xs font-semibold shadow-sm active:scale-95"
                             title={monarch.house === 'Republic' ? 'Career Path' : t('viewFamilyTree')}
                         >
-                            <span>{monarch.house === 'Republic' ? '🏛️' : '👑'}</span> 
-                            {monarch.house === 'Republic' ? 'Career' : t('familyTree')}
+                            {monarch.house === 'Republic' ? (
+                                <Landmark size={14} className="text-amber-400 flex-shrink-0" />
+                            ) : (
+                                <Crown size={14} className="text-amber-400 flex-shrink-0" />
+                            )}
+                            <span className="truncate">
+                                {monarch.house === 'Republic' ? 'Career' : t('familyTree', 'Family Tree')}
+                            </span>
                         </button>
+                    ) : (
+                        <div />
                     )}
                 </div>
             </div>
@@ -251,9 +274,9 @@ const ReviewScreen: React.FC<{
                         )}
                     </div>
                 ) : (
-                    <div className="w-full flex-grow flex flex-col justify-center py-4 md:py-6">
+                    <div className="w-full flex-1 flex flex-col justify-between items-center py-2 sm:py-4">
                         <div 
-                            className="w-full flex items-start"
+                            className="w-full flex-1 min-h-0 flex items-center overflow-x-hidden py-2 sm:py-3"
                             onMouseEnter={() => setIsPaused(true)}
                             onMouseLeave={() => setIsPaused(false)}
                             onTouchStart={() => setIsPaused(true)}
@@ -261,7 +284,7 @@ const ReviewScreen: React.FC<{
                         >
                             <div 
                                 ref={scrollRef}
-                                className="flex-shrink-0 flex items-center"
+                                className="flex-shrink-0 flex items-center py-2"
                                 style={{ 
                                     animationName: 'scroll',
                                     animationDuration: `${baseDuration}s`,
@@ -276,7 +299,7 @@ const ReviewScreen: React.FC<{
                         </div>
 
                         {/* Carousel Controls */}
-                        <div className="mt-4 mx-auto z-40 flex items-center gap-4 bg-slate-800/90 backdrop-blur-xl px-6 py-3 rounded-full border border-slate-600 shadow-2xl animate-fade-in-up">
+                        <div className="my-2 sm:my-3 mx-auto z-40 flex items-center gap-4 bg-slate-800/95 backdrop-blur-xl px-6 py-2.5 sm:py-3 rounded-full border border-slate-600 shadow-2xl animate-fade-in-up flex-shrink-0">
                             <button 
                                 onClick={handleReverse}
                                 className={`flex items-center gap-1 p-2 rounded-full transition-all ${animationDirection === 'reverse' && speedMultiplier > 1 ? 'text-blue-400 bg-blue-500/10' : 'text-slate-300 hover:text-white hover:bg-slate-700'}`}
