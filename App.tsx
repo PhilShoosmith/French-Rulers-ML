@@ -143,7 +143,7 @@ const InstructionsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700/80 shadow-xl bg-slate-900">
               <iframe
                 className="w-full h-full absolute inset-0"
-                src="https://www.youtube-nocookie.com/embed/JSyHaUZmMl0"
+                src="https://www.youtube-nocookie.com/embed/u3QRclu6IPc"
                 title="How to Play - Rulers of France Timeline"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
