@@ -10,6 +10,73 @@
     <link rel="preconnect" href="https://i.ibb.co" />
     <link rel="dns-prefetch" href="https://i.ibb.co" />
     <meta name="description" content="Test your knowledge of French leaders by placing them on the correct spot on the timeline. From medieval kings to modern presidents, score points for accuracy and see how well you know your French history!" />
+    <script>
+      // Mock Vite HMR WebSocket in cloud container environment to prevent connection failures and rejections
+      (function() {
+        var OrigWebSocket = window.WebSocket;
+        if (OrigWebSocket) {
+          window.WebSocket = function(url, protocols) {
+            var isViteHmr = (Array.isArray(protocols) && protocols.indexOf('vite-hmr') !== -1) ||
+                            protocols === 'vite-hmr' ||
+                            (typeof url === 'string' && (url.indexOf('token=') !== -1 || url.indexOf('/@vite') !== -1));
+            if (isViteHmr) {
+              var listeners = {};
+              return {
+                CONNECTING: 0,
+                OPEN: 1,
+                CLOSING: 2,
+                CLOSED: 3,
+                readyState: 1,
+                bufferedAmount: 0,
+                extensions: '',
+                protocol: 'vite-hmr',
+                url: String(url),
+                binaryType: 'blob',
+                send: function() {},
+                close: function() {},
+                addEventListener: function(type, fn) {
+                  listeners[type] = listeners[type] || [];
+                  listeners[type].push(fn);
+                },
+                removeEventListener: function(type, fn) {
+                  if (!listeners[type]) return;
+                  listeners[type] = listeners[type].filter(function(f) { return f !== fn; });
+                },
+                dispatchEvent: function() { return true; },
+                onopen: null,
+                onmessage: null,
+                onerror: null,
+                onclose: null
+              };
+            }
+            return new OrigWebSocket(url, protocols);
+          };
+          window.WebSocket.prototype = OrigWebSocket.prototype;
+          window.WebSocket.CONNECTING = 0;
+          window.WebSocket.OPEN = 1;
+          window.WebSocket.CLOSING = 2;
+          window.WebSocket.CLOSED = 3;
+        }
+
+        window.addEventListener('unhandledrejection', function(event) {
+          if (event.reason && (
+            (event.reason.message && event.reason.message.indexOf('WebSocket') !== -1) ||
+            (event.reason.stack && event.reason.stack.indexOf('@vite/client') !== -1)
+          )) {
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+            if (event.preventDefault) event.preventDefault();
+          }
+        }, true);
+
+        window.addEventListener('error', function(event) {
+          if ((event.message && event.message.indexOf('WebSocket') !== -1) ||
+              (event.filename && event.filename.indexOf('@vite/client') !== -1)) {
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+            if (event.preventDefault) event.preventDefault();
+          }
+        }, true);
+      })();
+    </script>
     <link rel="stylesheet" href="/index.css" />
     <script src="https://cdn.tailwindcss.com"></script>
 <style>

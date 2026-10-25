@@ -253,17 +253,17 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
 
       {/* Middle Content: Centered without any overflow */}
       <div className="relative z-10 w-full flex-1 min-h-0 flex flex-col items-center justify-center px-3 py-1 overflow-y-auto sm:overflow-visible">
-          {/* Main Content Card */}
-          <div className="text-center p-3.5 sm:p-6 md:p-8 bg-slate-800/85 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 max-w-2xl w-full mx-auto flex-shrink-0">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-1 sm:mb-2 animate-fade-in-up leading-tight">
-              {t('titleMain')}<br />{t('titleSub')}
+          {/* Main Content Card - width reduced by a quarter */}
+          <div className="text-center p-3.5 sm:p-5 md:p-6 bg-slate-800/85 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 max-w-lg md:max-w-xl w-full mx-auto flex-shrink-0">
+            <h1 className="text-base min-[360px]:text-lg min-[430px]:text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-1 sm:mb-2 animate-fade-in-up leading-tight whitespace-nowrap tracking-tight">
+              {t('titleMain')} {t('titleSub')}
             </h1>
-            <p className="text-xs sm:text-base md:text-lg text-slate-300 mb-2.5 sm:mb-5 animate-fade-in-up animation-delay-200">
+            <p className="text-xs sm:text-sm md:text-base text-slate-300 mb-2 sm:mb-4 animate-fade-in-up animation-delay-200">
               {t('subtitle')}
             </p>
             
             {/* 2-column layout on both mobile and desktop to minimize height */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 mt-2 sm:mt-5 animate-fade-in-up animation-delay-400">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mt-2 sm:mt-3.5 animate-fade-in-up animation-delay-400">
                 {/* Column 1: Learning/Info */}
                 <div className="flex flex-col items-center gap-1.5 sm:gap-3 flex-1">
                     <h3 className="text-amber-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs md:text-sm mb-0.5">{t('learn')}</h3>
@@ -330,7 +330,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, monarchs, onShowInst
 
           {/* Daily Historical Fact Banner */}
           {dailyFactMonarch && (
-            <div className="w-full max-w-2xl mx-auto px-1 mt-2 sm:mt-3 animate-fade-in-up animation-delay-800 flex-shrink-0">
+            <div className="w-full max-w-lg md:max-w-xl mx-auto px-1 mt-2 sm:mt-3 animate-fade-in-up animation-delay-800 flex-shrink-0">
               <div className="bg-slate-800/90 backdrop-blur-md border border-slate-700/80 shadow-lg rounded-xl p-2 sm:p-3 flex flex-row gap-2 sm:gap-3 items-center mx-auto">
                 <div className="flex-shrink-0 bg-blue-500/20 text-blue-400 rounded-full p-1.5 hidden sm:block">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

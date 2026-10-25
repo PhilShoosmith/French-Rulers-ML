@@ -162,31 +162,39 @@ const HallOfFameModal: React.FC<HallOfFameModalProps> = ({ isOpen, onClose }) =>
           ) : (
             <table className="w-full table-fixed border-collapse">
               <colgroup>
-                <col className="w-10 sm:w-16" />
-                <col className="w-auto" />
-                <col className="w-16 sm:w-24" />
-                <col className="w-16 sm:w-24" />
+                <col className="w-[12%]" />
+                <col className="w-[28%]" />
+                <col className="w-[20%]" />
+                <col className="w-[20%]" />
+                <col className="w-[20%]" />
               </colgroup>
               <thead>
                 <tr className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wider border-b border-slate-700/50">
-                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-center sm:text-left">{t('rank')}</th>
-                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-left">{t('player')}</th>
-                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-center">{t('correct')}</th>
-                  <th className="py-2 sm:py-3 px-1.5 sm:px-3 text-center">{t('timeLeft')}</th>
+                  <th className="py-2 sm:py-3 px-1 sm:px-2 text-center sm:text-left">{t('rank')}</th>
+                  <th className="py-2 sm:py-3 px-1 sm:px-2 text-left">{t('player')}</th>
+                  <th className="py-2 sm:py-3 px-1 sm:px-2 text-center">{t('correct')}</th>
+                  <th className="py-2 sm:py-3 px-1 sm:px-2 text-center">{t('timeLeft')}</th>
+                  <th className="py-2 sm:py-3 px-1 sm:px-2 text-center sm:text-right">{t('date')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/30">
                 {scores.map((score, index) => (
                   <tr key={index} className="group hover:bg-slate-700/20 transition-colors">
-                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 font-bold text-slate-400 text-center sm:text-left text-xs sm:text-sm">
+                    <td className="py-2 sm:py-3 px-1 sm:px-2 font-bold text-slate-400 text-center sm:text-left text-xs sm:text-sm">
                       {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                     </td>
-                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 text-xs sm:text-sm font-semibold text-white overflow-hidden">
+                    <td className="py-2 sm:py-3 px-1 sm:px-2 text-xs sm:text-sm font-semibold text-white overflow-hidden">
                       <div className="truncate" title={score.name}>{score.name}</div>
-                      <div className="text-[9px] sm:text-[10px] text-slate-500 font-normal truncate">{new Date(score.date).toLocaleDateString()}</div>
                     </td>
-                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 text-center text-green-400 font-bold text-xs sm:text-sm">{score.score}</td>
-                    <td className="py-2 sm:py-3 px-1.5 sm:px-3 text-center text-yellow-300 font-mono text-xs sm:text-sm">{score.timeLeft}s</td>
+                    <td className="py-2 sm:py-3 px-1 sm:px-2 text-center text-green-400 font-bold text-xs sm:text-sm whitespace-nowrap">
+                      {score.score}
+                    </td>
+                    <td className="py-2 sm:py-3 px-1 sm:px-2 text-center text-yellow-300 font-mono text-xs sm:text-sm whitespace-nowrap">
+                      {score.timeLeft}s
+                    </td>
+                    <td className="py-2 sm:py-3 px-1 sm:px-2 text-center sm:text-right text-slate-400 font-mono text-[10px] sm:text-xs whitespace-nowrap">
+                      {new Date(score.date).toLocaleDateString()}
+                    </td>
                   </tr>
                 ))}
               </tbody>

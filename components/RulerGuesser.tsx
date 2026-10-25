@@ -93,22 +93,22 @@ const RulerGuesser: React.FC<RulerGuesserProps> = ({ allMonarchs, correctMonarch
 
 
   return (
-    <div className="p-2.5 sm:p-5 bg-slate-800/80 rounded-xl sm:rounded-2xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full max-w-xl mx-auto">
-      <p className="text-xs sm:text-base md:text-lg text-slate-300 font-medium mb-1.5 sm:mb-2 text-center">
+    <div className="p-2 sm:p-3.5 bg-slate-800/85 rounded-xl sm:rounded-2xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full max-w-xl mx-auto">
+      <p className="text-xs sm:text-sm md:text-base text-slate-300 font-medium mb-1 text-center">
         {t('whichFrenchLeader')}
       </p>
-      <blockquote className="my-2 sm:my-3 p-2.5 sm:p-3.5 border-l-4 border-amber-500 bg-slate-900/60 rounded-r-lg max-h-24 sm:max-h-36 overflow-y-auto custom-scrollbar">
+      <blockquote className="my-1.5 sm:my-2.5 p-2 sm:p-2.5 border-l-4 border-amber-500 bg-slate-900/60 rounded-r-lg max-h-16 sm:max-h-24 overflow-y-auto custom-scrollbar">
         <p className="text-xs sm:text-sm text-slate-200 italic leading-snug">
           "{getMonarchContext(correctMonarch)}"
         </p>
       </blockquote>
-      <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-2 sm:mt-4">
+      <div className="grid grid-cols-2 gap-1.5 sm:gap-2.5 mt-1.5 sm:mt-3">
         {options.map((option, index) => (
           <button
             key={option.id}
             onClick={() => handleGuess(option.id)}
             disabled={disabled || !!selection}
-            className={`w-full px-2.5 py-2 sm:py-3 text-white font-bold text-xs sm:text-sm md:text-base rounded-lg transform active:scale-95 transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 animate-fade-in-up truncate ${getButtonClass(option.id)}`}
+            className={`w-full px-2 py-1.5 sm:py-2 text-white font-bold text-xs sm:text-sm rounded-lg transform active:scale-95 transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 animate-fade-in-up truncate ${getButtonClass(option.id)}`}
             style={{ animationDelay: `${index * 100}ms` }}
           >
             {getMonarchName(option)}

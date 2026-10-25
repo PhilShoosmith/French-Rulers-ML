@@ -749,79 +749,78 @@ export const getGameMonarchs = (sourceMonarchs: Monarch[]): Monarch[] => {
             )}
             <Scoreboard score={score} incorrect={incorrectAnswers} round={currentRound + 1} totalRounds={ROUNDS_PER_GAME} timeLeft={timeLeft} isAdmin={isAdmin} />
             
-            <div className="w-full flex-1 min-h-0 flex flex-col justify-center items-center py-1 sm:py-2 gap-2 sm:gap-4 overflow-y-auto sm:overflow-visible">
-              <div className={`w-full flex flex-col ${isYearMode ? 'sm:flex-row items-center justify-center gap-2 sm:gap-6' : 'items-center justify-center gap-2 sm:gap-4'} max-w-4xl mx-auto`}>
-                <div className={`${isYearMode ? 'w-full sm:w-auto max-w-sm sm:max-w-[220px]' : 'w-full max-w-sm'} mx-auto sm:mx-0 flex-shrink-0`}>
-                  {(gameMode !== 'ruler' || gameState === 'feedback') && (
-                    <MonarchCard
-                      monarch={currentMonarch}
-                      showReign={gameState === 'feedback' || isAdmin}
-                      isAdmin={isAdmin}
-                      onPortraitUpload={handlePortraitUpload}
-                      stagedPortraitUrl={stagedPortraitChanges[currentMonarch?.id]}
-                      compact={isYearMode}
-                    />
-                  )}
-                </div>
+            <div className="w-full flex-1 min-h-0 flex flex-col justify-start sm:justify-center items-center py-1 sm:py-2 px-2 sm:px-4 gap-1.5 sm:gap-2.5 overflow-hidden">
+              {/* Photo card ALWAYS at the top of the screen for all 3 game screens */}
+              <div className="w-full max-w-sm sm:max-w-md mx-auto flex justify-center flex-shrink-0">
+                <MonarchCard
+                  monarch={currentMonarch}
+                  showReign={gameState === 'feedback' || isAdmin}
+                  isAdmin={isAdmin}
+                  onPortraitUpload={handlePortraitUpload}
+                  stagedPortraitUrl={stagedPortraitChanges[currentMonarch?.id]}
+                  compact={true}
+                  hideName={gameMode === 'ruler' && gameState === 'playing'}
+                />
+              </div>
 
-                <div className={`w-full ${isYearMode ? 'max-w-md' : 'max-w-xl'}`}>
-                  {gameState === 'feedback' && lastGuess ? (
-                    <Feedback 
-                      lastGuess={lastGuess} 
-                      onNext={nextRound} 
-                      monarch={currentMonarch} 
-                      onLearnMore={handleLearnMore} 
-                      allMonarchs={allMonarchsData} 
-                      onStop={handleStopGame} 
-                      onOpenFamilyTree={handleOpenFamilyTree}
-                    />
-                  ) : (
-                     <>
-                      {gameMode === 'year' && (
-                         <div className="p-2.5 sm:p-4 bg-slate-800/80 rounded-xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full">
-                          <p className="text-xs sm:text-sm md:text-base text-slate-300 font-medium mb-1.5 sm:mb-2 text-center">{t('placeOnTimeline', { name: getMonarchName(currentMonarch) })}</p>
-                          <form onSubmit={handleTypedGuess} className="flex flex-row items-center gap-2 w-full">
-                              <input 
-                                type="number" 
-                                value={typedYear} 
-                                onChange={(e) => setTypedYear(e.target.value)} 
-                                disabled={gameState === 'feedback'} 
-                                placeholder={t('enterYear')} 
-                                className="bg-slate-700/70 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-sm sm:text-base flex-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 shadow-inner" 
-                                aria-label="Enter reign start year" 
-                              />
-                              <button 
-                                type="submit" 
-                                disabled={gameState === 'feedback' || !typedYear.trim()} 
-                                className="px-4 py-1.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform active:scale-95 transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-xs sm:text-sm flex-shrink-0"
-                              >
-                                {t('submit')}
-                              </button>
-                          </form>
-                         </div>
-                      )}
-                      {gameMode === 'monarch' && (
-                         <div className="p-3 sm:p-5 bg-slate-800/80 rounded-xl sm:rounded-2xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full">
-                          <p className="text-xs sm:text-sm md:text-base text-slate-300 font-medium mb-2 text-center">{t('whoWasSuccessor', { name: getMonarchName(currentMonarch) })}</p>
-                           <NextMonarchGuesser 
-                             monarchs={allMonarchsData} 
-                             onSubmit={handleMonarchGuess} 
-                             disabled={gameState === 'feedback'}
-                             correctSuccessorId={correctSuccessor?.id}
-                           />
-                         </div>
-                      )}
-                      {gameMode === 'ruler' && (
-                        <RulerGuesser allMonarchs={allMonarchsData} correctMonarch={currentMonarch} onSubmit={handleRulerGuess} disabled={gameState === 'feedback'} />
-                      )}
-                     </>
-                  )}
-                </div>
+              {/* Other information ALWAYS below the photo card */}
+              <div className="w-full max-w-md sm:max-w-xl mx-auto flex flex-col items-center flex-shrink-0">
+                {gameState === 'feedback' && lastGuess ? (
+                  <Feedback 
+                    lastGuess={lastGuess} 
+                    onNext={nextRound} 
+                    monarch={currentMonarch} 
+                    onLearnMore={handleLearnMore} 
+                    allMonarchs={allMonarchsData} 
+                    onStop={handleStopGame} 
+                    onOpenFamilyTree={handleOpenFamilyTree}
+                  />
+                ) : (
+                   <>
+                    {gameMode === 'year' && (
+                       <div className="p-2 sm:p-2.5 bg-slate-800/85 rounded-xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full">
+                        <p className="text-xs sm:text-sm text-slate-300 font-medium mb-1 text-center">{t('placeOnTimeline', { name: getMonarchName(currentMonarch) })}</p>
+                        <form onSubmit={handleTypedGuess} className="flex flex-row items-center gap-2 w-full">
+                            <input 
+                              type="number" 
+                              value={typedYear} 
+                              onChange={(e) => setTypedYear(e.target.value)} 
+                              disabled={gameState === 'feedback'} 
+                              placeholder={t('enterYear')} 
+                              className="bg-slate-700/70 border border-slate-600 rounded-lg px-3 py-1 text-white text-xs sm:text-sm flex-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 shadow-inner" 
+                              aria-label="Enter reign start year" 
+                            />
+                            <button 
+                              type="submit" 
+                              disabled={gameState === 'feedback' || !typedYear.trim()} 
+                              className="px-3.5 py-1 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transform active:scale-95 transition-all duration-200 shadow-md disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-xs sm:text-sm flex-shrink-0"
+                            >
+                              {t('submit')}
+                            </button>
+                        </form>
+                       </div>
+                    )}
+                    {gameMode === 'monarch' && (
+                       <div className="p-2.5 sm:p-3.5 bg-slate-800/85 rounded-xl sm:rounded-2xl border border-slate-700/60 shadow-lg animate-fade-in-up w-full">
+                        <p className="text-xs sm:text-sm text-slate-300 font-medium mb-1.5 text-center">{t('whoWasSuccessor', { name: getMonarchName(currentMonarch) })}</p>
+                         <NextMonarchGuesser 
+                           monarchs={allMonarchsData} 
+                           onSubmit={handleMonarchGuess} 
+                           disabled={gameState === 'feedback'}
+                           correctSuccessorId={correctSuccessor?.id}
+                         />
+                       </div>
+                    )}
+                    {gameMode === 'ruler' && (
+                      <RulerGuesser allMonarchs={allMonarchsData} correctMonarch={currentMonarch} onSubmit={handleRulerGuess} disabled={gameState === 'feedback'} />
+                    )}
+                   </>
+                )}
               </div>
             </div>
             
             {gameMode === 'year' && (
-              <div className="w-full flex-shrink-0">
+              <div className="w-full flex-shrink-0 px-2 sm:px-4 pb-1 sm:pb-2">
                  <Timeline 
                     onGuess={handleYearGuess} 
                     disabled={gameState === 'feedback' || isAdmin} 
